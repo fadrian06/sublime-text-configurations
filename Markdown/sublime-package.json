@@ -1,0 +1,21 @@
+{
+  "contributions": {
+    "settings": [
+      {
+        "file_patterns": [
+          "Markdown.sublime-settings",
+          "MultiMarkdown.sublime-settings",
+        ],
+        "schema": {
+          "properties": {
+            "set_unsaved_view_name_for_syntax": {
+              "type": "boolean",
+              "default": true,
+              "markdownDescription": "",
+            }
+          }
+        }
+      }
+    ]
+  }
+}

@@ -133,7 +133,6 @@
   "hot_exit_projects": true,
   "ignored_packages": [
     "ActionScript",
-    "AdvancedNewFile",
     "Alignment",
     "All Autocomplete",
     "AlpineJS",
