@@ -133,6 +133,7 @@
   "hot_exit_projects": true,
   "ignored_packages": [
     "ActionScript",
+    "AdvancedNewFile",
     "Alignment",
     "All Autocomplete",
     "AlpineJS",
@@ -172,6 +173,7 @@
     "Language - English",
     "Laravel Blade",
     "Lisp",
+    "LiveServer",
     "LSP-astro",
     "LSP-biome",
     "LSP-clangd",
@@ -243,6 +245,7 @@
     "SVG Preview",
     "Tailwind CSS",
     "TCL",
+    "Terminus",
     "Textile",
     "TOML",
     "Transparency",

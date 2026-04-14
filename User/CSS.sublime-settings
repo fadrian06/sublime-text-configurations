@@ -1,8 +1,0 @@
-// These settings override both User and Default settings for the CSS syntax
-{
-  "disable_default_completions": true,
-  "extensions": [
-    "css"
-  ],
-  "lsp_format_on_save": true
-}

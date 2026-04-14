@@ -1,7 +1,0 @@
-{
-	"html-minifier_options": "--collapse-boolean-attributes --collapse-inline-tag-whitespace --collapse-whitespace --no-html5 --minify-css --minify-js --process-conditional-comments --remove-comments --remove-empty-attributes --remove-empty-elements --remove-redundant-attributes --remove-script-type-attributes --remove-style-link-type-attributes --remove-tag-whitespace",
-	"cleancss_options": "--with-rebase",
-	"css_source_map": true,
-	"uglifyjs_options": "--no-annotations --v8 --webkit",
-	"source_map": true
-}

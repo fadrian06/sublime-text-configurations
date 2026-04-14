@@ -1,8 +1,0 @@
-// These settings override both User and Default settings for the Sass syntax
-{
-  "indent_guide_options": [
-    "draw_normal",
-    "draw_active_single",
-    "solid"
-  ]
-}

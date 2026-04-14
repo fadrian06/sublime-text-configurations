@@ -1,8 +1,0 @@
-// These settings override both User and Default settings for the PHP syntax
-{
-  "auto_complete_include_snippets_when_typing": false,
-  "extensions": [
-    "php",
-    "stub",
-  ],
-}
