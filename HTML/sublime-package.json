@@ -1,0 +1,33 @@
+{
+  "contributions": {
+    "settings": [
+      {
+        "file_patterns": [
+          "HTML.sublime-settings",
+        ],
+        "schema": {
+          "properties": {
+            "disable_default_completions": {
+              "type": "boolean",
+              "default": false,
+              "markdownDescription": "Set to true to disable default completions."
+            },
+            "default_completions_selector": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": [
+                // Plain HTML
+                "text.html - text.html meta.embedded - text.html meta.interpolation - text.html source - (text.html.markdown - markup.raw.code-fence text.html), ",
+                // Embedded HTML blocks
+                "text.html.embedded - text.html.embedded meta.embedded - text.html.embedded meta.interpolation - text.html.embedded source",
+              ],
+              "markdownDescription": "Controls what scopes default completions will be provided in. Can be a list of strings which are joined before matching."
+            }
+          }
+        }
+      }
+    ]
+  }
+}
