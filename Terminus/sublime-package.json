@@ -1,0 +1,509 @@
+{
+  "contributions": {
+    "settings": [
+      {
+        "file_patterns": [
+          "Terminus.sublime-settings"
+        ],
+        "schema": {
+          "properties": {
+            "default_config": {
+              "type": "object",
+              "properties": {
+                "linux": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "default": null,
+                  "markdownDescription": "Default shell config for Linux platforms. Set to null for login shell."
+                },
+                "osx": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "default": null,
+                  "markdownDescription": "Default shell config for macOS platforms. Set to null for login shell."
+                },
+                "windows": {
+                  "type": "string",
+                  "default": "Command Prompt",
+                  "markdownDescription": "Default shell config for Windows platforms."
+                }
+              },
+              "default": {
+                "linux": null,
+                "osx": null,
+                "windows": "Command Prompt"
+              },
+              "markdownDescription": "The default config, either a single config name or a platform specific dict."
+            },
+            "shell_configs": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "markdownDescription": "Display name of the shell configuration."
+                  },
+                  "cmd": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    ],
+                    "markdownDescription": "Command to execute the shell. Can be a string or an array of strings."
+                  },
+                  "env": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "string"
+                    },
+                    "markdownDescription": "Environment variables to set for this shell."
+                  },
+                  "enable": {
+                    "type": "boolean",
+                    "default": true,
+                    "markdownDescription": "Whether this shell configuration is enabled."
+                  },
+                  "platforms": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "markdownDescription": "Platforms where this shell configuration is available (linux, osx, windows)."
+                  }
+                },
+                "required": [
+                  "name",
+                  "cmd"
+                ]
+              },
+              "default": [
+                {
+                  "name": "Bash",
+                  "cmd": [
+                    "bash",
+                    "-i",
+                    "-l"
+                  ],
+                  "env": {},
+                  "enable": true,
+                  "platforms": [
+                    "linux",
+                    "osx"
+                  ]
+                },
+                {
+                  "name": "Zsh",
+                  "cmd": [
+                    "zsh",
+                    "-i",
+                    "-l"
+                  ],
+                  "env": {},
+                  "enable": true,
+                  "platforms": [
+                    "linux",
+                    "osx"
+                  ]
+                },
+                {
+                  "name": "Command Prompt",
+                  "cmd": "cmd.exe",
+                  "env": {},
+                  "enable": true,
+                  "platforms": [
+                    "windows"
+                  ]
+                },
+                {
+                  "name": "PowerShell Core",
+                  "cmd": "pwsh.exe",
+                  "env": {},
+                  "enable": true,
+                  "platforms": [
+                    "windows"
+                  ]
+                },
+                {
+                  "name": "PowerShell",
+                  "cmd": "powershell.exe",
+                  "env": {},
+                  "enable": true,
+                  "platforms": [
+                    "windows"
+                  ]
+                },
+                {
+                  "name": "Cmder",
+                  "cmd": [
+                    "cmd.exe",
+                    "/k",
+                    "%CMDER_ROOT%\\vendor\\init.bat"
+                  ],
+                  "env": {},
+                  "enable": false,
+                  "platforms": [
+                    "windows"
+                  ]
+                },
+                {
+                  "name": "WSL Login Shell",
+                  "cmd": "wsl.exe",
+                  "env": {},
+                  "enable": true,
+                  "platforms": [
+                    "windows"
+                  ]
+                }
+              ],
+              "markdownDescription": "A list of available shells to execute."
+            },
+            "256color": {
+              "type": "boolean",
+              "default": true,
+              "markdownDescription": "Enable 256 color support in the terminal."
+            },
+            "brighten_bold_text": {
+              "type": "boolean",
+              "default": true,
+              "markdownDescription": "Brighten bold text for better visibility."
+            },
+            "unix_term": {
+              "type": "string",
+              "enum": [
+                "linux",
+                "xterm",
+                "xterm-256color"
+              ],
+              "default": "xterm-256color",
+              "markdownDescription": "The default TERM variable for Unix systems. Not all xterm features are supported."
+            },
+            "unix_lang": {
+              "type": "string",
+              "default": "en_US.UTF-8",
+              "markdownDescription": "The default LANG variable for Unix systems."
+            },
+            "scrollback_history_size": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 10000,
+              "markdownDescription": "Number of lines kept in scrollback history. Decreasing this value may improve performance."
+            },
+            "min_columns": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 20,
+              "markdownDescription": "Minimum terminal width in characters."
+            },
+            "max_columns": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 500,
+              "markdownDescription": "Maximum terminal width in characters."
+            },
+            "size": {
+              "type": "array",
+              "items": {
+                "type": [
+                  "integer",
+                  "null"
+                ]
+              },
+              "minItems": 2,
+              "maxItems": 2,
+              "default": [
+                null,
+                null
+              ],
+              "markdownDescription": "Force the terminal size as [columns, rows]. Use null for default."
+            },
+            "natural_keyboard": {
+              "type": "boolean",
+              "default": true,
+              "markdownDescription": "Windows and Linux only: Use Ctrl+C to copy, Ctrl+V to paste, Ctrl+PageDown/PageUp to change tabs."
+            },
+            "preserve_keys": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": [],
+              "markdownDescription": "Preserve specific Ctrl+[a-z] keybindings instead of sending them to the terminal process."
+            },
+            "theme": {
+              "type": "string",
+              "enum": [
+                "adaptive",
+                "classic",
+                "user",
+                "3024-day",
+                "3024-night",
+                "adventuretime",
+                "afterglow",
+                "alien-blood",
+                "argonaut",
+                "arthur",
+                "atom",
+                "ayu-mirage",
+                "belafonte-day",
+                "belafonte-night",
+                "birds-of-paradise",
+                "blazer",
+                "borland",
+                "brackets-dark",
+                "brackets-light",
+                "broadcast",
+                "brogrammer",
+                "c64",
+                "campbell",
+                "chalk",
+                "chalkboard",
+                "ciapre",
+                "clrs",
+                "cobalt-neon",
+                "cobalt2",
+                "crayon-pony-fish",
+                "dark-pastel",
+                "darkside",
+                "desert",
+                "dimmed-monokai",
+                "dracula",
+                "earthsong",
+                "elemental",
+                "espresso-libre",
+                "espresso",
+                "fishtank",
+                "flat",
+                "flatland",
+                "flatty",
+                "frontend-delight",
+                "frontend-fun-forrest",
+                "frontend-galaxy",
+                "github",
+                "grape",
+                "grass",
+                "gruvbox",
+                "hardcore",
+                "harper",
+                "highway",
+                "hipster-green",
+                "homebrew",
+                "hurtado",
+                "hybrid",
+                "ic-green-ppl",
+                "ic-orange-ppl",
+                "idle-toes",
+                "ir-black",
+                "jackie-brown",
+                "japanesque",
+                "jellybeans",
+                "kibble",
+                "later-this-evening",
+                "lavandula",
+                "liquid-carbon-transparent",
+                "liquid-carbon",
+                "man-page",
+                "mariana",
+                "mathias",
+                "medallion",
+                "misterioso",
+                "molokai",
+                "monalisa",
+                "monokai-pro",
+                "monokai-soda",
+                "monokai",
+                "n0tch2k",
+                "neopolitan",
+                "neutron",
+                "nightlion-v1",
+                "nightlion-v2",
+                "nord",
+                "novel",
+                "obsidian",
+                "ocean",
+                "oceanic-next",
+                "ollie",
+                "one-dark",
+                "paraiso-dark",
+                "paul-millr",
+                "pencil-dark",
+                "pencil-light",
+                "pnevma",
+                "pro",
+                "red-alert",
+                "red-sands",
+                "rippedcasts",
+                "royal",
+                "sea-shells",
+                "seafoam-pastel",
+                "seti",
+                "shaman",
+                "slate",
+                "smyck",
+                "soft-server",
+                "solarized-darcula",
+                "solarized-dark-higher-contrast",
+                "solarized-light",
+                "spacedust",
+                "spacegray-eighties-dull",
+                "spacegray-eighties",
+                "spacegray",
+                "spring",
+                "square",
+                "sundried",
+                "symphonic",
+                "teerb",
+                "terminal-basic",
+                "terminix-dark",
+                "thayer-bright",
+                "tomorrow-night-blue",
+                "tomorrow-night-bright",
+                "tomorrow-night-eighties",
+                "tomorrow-night",
+                "tomorrow",
+                "toy-chest",
+                "treehouse",
+                "twilight",
+                "ultimate-dark-neo",
+                "urple",
+                "vaughn",
+                "vibrant-ink",
+                "warm-neon",
+                "wez",
+                "wild-cherry",
+                "wombat",
+                "wryan",
+                "zenburn"
+              ],
+              "default": "adaptive",
+              "markdownDescription": "The theme name. Can be 'adaptive', 'classic', 'user', or any theme from the Terminus themes directory (e.g., 'argonaut', 'dracula', 'nord')."
+            },
+            "user_theme_colors": {
+              "type": "object",
+              "properties": {
+                "background": {
+                  "type": "string",
+                  "markdownDescription": "Background color."
+                },
+                "foreground": {
+                  "type": "string",
+                  "markdownDescription": "Foreground text color."
+                },
+                "caret": {
+                  "type": "string",
+                  "markdownDescription": "Caret cursor color."
+                },
+                "block_caret": {
+                  "type": "string",
+                  "markdownDescription": "Block cursor color."
+                },
+                "selection": {
+                  "type": "string",
+                  "markdownDescription": "Selection background color."
+                },
+                "selection_foreground": {
+                  "type": "string",
+                  "markdownDescription": "Selection foreground color."
+                },
+                "black": {
+                  "type": "string",
+                  "markdownDescription": "ANSI black color."
+                },
+                "red": {
+                  "type": "string",
+                  "markdownDescription": "ANSI red color."
+                },
+                "green": {
+                  "type": "string",
+                  "markdownDescription": "ANSI green color."
+                },
+                "brown": {
+                  "type": "string",
+                  "markdownDescription": "ANSI brown/yellow color."
+                },
+                "blue": {
+                  "type": "string",
+                  "markdownDescription": "ANSI blue color."
+                },
+                "magenta": {
+                  "type": "string",
+                  "markdownDescription": "ANSI magenta color."
+                },
+                "cyan": {
+                  "type": "string",
+                  "markdownDescription": "ANSI cyan color."
+                },
+                "white": {
+                  "type": "string",
+                  "markdownDescription": "ANSI white color."
+                },
+                "light_black": {
+                  "type": "string",
+                  "markdownDescription": "ANSI bright black color."
+                },
+                "light_red": {
+                  "type": "string",
+                  "markdownDescription": "ANSI bright red color."
+                },
+                "light_green": {
+                  "type": "string",
+                  "markdownDescription": "ANSI bright green color."
+                },
+                "light_brown": {
+                  "type": "string",
+                  "markdownDescription": "ANSI bright brown/yellow color."
+                },
+                "light_blue": {
+                  "type": "string",
+                  "markdownDescription": "ANSI bright blue color."
+                },
+                "light_magenta": {
+                  "type": "string",
+                  "markdownDescription": "ANSI bright magenta color."
+                },
+                "light_cyan": {
+                  "type": "string",
+                  "markdownDescription": "ANSI bright cyan color."
+                },
+                "light_white": {
+                  "type": "string",
+                  "markdownDescription": "ANSI bright white color."
+                }
+              },
+              "additionalProperties": false,
+              "default": {},
+              "markdownDescription": "Custom theme colors when 'theme' is set to 'user'."
+            },
+            "view_settings": {
+              "type": "object",
+              "additionalProperties": true,
+              "default": {},
+              "markdownDescription": "Extra view settings passed to the terminus_view (font_face, font_size, paddings, etc.)."
+            },
+            "reactivate_terminals": {
+              "type": "boolean",
+              "default": true,
+              "markdownDescription": "Reactivate terminals when the window starts."
+            },
+            "debug": {
+              "type": "boolean",
+              "default": false,
+              "markdownDescription": "Enable debug mode for troubleshooting."
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    ]
+  }
+}
