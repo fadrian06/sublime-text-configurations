@@ -1,0 +1,5 @@
+{
+	"shell_cmd": "oxlint --jsdoc-plugin --jsx-a11y-plugin --format=unix \"$file_name\"",
+	"selector": "source.(js|ts)",
+	"quiet": true
+}

@@ -1,0 +1,17 @@
+// Documentation at https://www.sublimetext.com/docs/color_schemes.html
+{
+	"variables": {},
+	"globals": {
+		"background": "var(black)"
+	},
+	"rules": [
+		/////////
+		// PHP //
+		/////////
+		{
+			"name": "Etiquetas",
+			"scope": "punctuation.section.embedded.(begin|end).php",
+			"foreground": "var(red)"
+		}
+	]
+}

@@ -1,0 +1,8 @@
+// Settings in here override those in "LSP-rome/LSP-rome.sublime-settings"
+{
+	"enabled": false,
+	"settings": {
+		"rome.rename": true
+	},
+	"selector": "source.js | source.ts | source.jsx | source.tsx | source.js.jsx | source.js.react | source.ts.react"
+}

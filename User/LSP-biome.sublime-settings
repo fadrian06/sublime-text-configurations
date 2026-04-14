@@ -1,0 +1,8 @@
+// Settings in here override those in "LSP-biome/LSP-biome.sublime-settings"
+{
+  "enabled": true,
+  "selector": "source.js | source.ts | source.jsx | source.tsx | source.js.jsx | source.js.react | source.ts.react | source.json - source.json.php | source.css",
+  "settings": {
+    "biome.rename": true
+  }
+}

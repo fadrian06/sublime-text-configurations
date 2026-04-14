@@ -1,0 +1,19 @@
+{
+	"extensions": [
+		"palettes",
+		".eslintrc",
+		".jslintrc",
+		".jshintrc",
+		"sublime-build",
+		"sublime-color-scheme",
+		".pug-lintrc",
+		"JSON-tmLanguage",
+		"map",
+		"lock",
+		"test-results",
+		"mdj",
+		".swcrc",
+		"skins",
+		"code-snippets"
+	]
+}

@@ -1,0 +1,8 @@
+{
+	"avif_converter": "magick",
+	"svg_converter": "magick",
+	"webp_converter": "magick",
+	"color_preview": false,
+	"extensionless_image_preview": true,
+	"image_scope_selector": "meta.tag meta.attribute-with-value string | markup.underline.link.image.markdown | meta.property-value.css meta.function-call string"
+}

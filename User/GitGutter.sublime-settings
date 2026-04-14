@@ -1,0 +1,6 @@
+// GitGutter Settings - User
+{
+	"show_status_bar_text": false,
+	"diff_algorithm": "default",
+	"debounce_delay": 0,
+}

@@ -1,0 +1,17 @@
+<snippet>
+<!--
+    Fields: $field_number or ${field_number:default_text}, e.g. $1 or ${1:name}
+    Variables: $variable or ${variable/regex/replace/flags}, e.g. $TM_FILEPATH
+    More: https://www.sublimetext.com/docs/completions.html#snippets
+-->
+<content><![CDATA[
+<!-- Minified version -->
+<link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+
+<!-- Un-Minified version -->
+<link rel="stylesheet" href="https://cdn.simplecss.org/simple.css">
+]]></content>
+<tabTrigger>simplecss</tabTrigger>
+<scope>text.html.basic - source.php</scope>
+<description>SimpleCSS Styles</description>
+</snippet>

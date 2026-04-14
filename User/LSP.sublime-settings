@@ -1,0 +1,23 @@
+// Settings in here override those in "LSP/LSP.sublime-settings"
+{
+  "lsp_code_actions_on_save": {
+    // "source.fixAll": true,
+    // "source.addMissingImports.ts": true,
+    // "source.fixAll.biome": true,
+    // "source.fixAll.eslint": true,
+    // "source.fixAll.ts": true,
+    // "source.organizeImports.biome": true,
+    // "source.organizeImports.ts": true,
+    // "source.removeUnused.ts": true,
+    // "source.removeUnusedImports.ts": true,
+    // "source.sortImports.ts": true,
+    // "source.biome": true,
+  },
+  "show_diagnostics_in_view_status": false,
+  "show_diagnostics_annotations_severity_level": 4,
+  "show_inlay_hints": true,
+  "semantic_highlighting": true,
+  "popup_max_characters_width": 80,
+  "refactoring_auto_save": "always",
+  "clients": {},
+}

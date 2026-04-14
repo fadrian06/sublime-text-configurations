@@ -1,0 +1,33 @@
+<snippet>
+	<content><![CDATA[
+<?php \$id = uniqid() ?>
+
+<template id="<?= \$id ?>">
+	${2:<link rel="stylesheet" href="${3:external.css}" />}
+	${4:<style>
+		${5:@import url('${6:external.css}')}
+		${7:/* Your scoped styles */}
+	</style>}
+	${8:<!-- Your markup -->}
+</template>
+
+<script>
+	customElements.define('${1:tag-name}', class extends HTMLElement {
+		constructor() {
+			super()
+
+			const template = document.getElementById('<?= \$id ?>').content
+
+			this.attachShadow(
+				{ mode: 'open' }
+			).appendChild(template.cloneNode(true))
+		}
+	})
+</script>
+
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>customelement</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>text.html.php</scope>
+</snippet>

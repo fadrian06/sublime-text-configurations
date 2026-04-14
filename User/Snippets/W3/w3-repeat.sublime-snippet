@@ -1,0 +1,9 @@
+<snippet>
+	<content><![CDATA[
+w3-repeat="${1:arrayName}"
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>w3-repeat</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>text.html.basic meta.tag.(inline|block).any.html</scope>
+</snippet>

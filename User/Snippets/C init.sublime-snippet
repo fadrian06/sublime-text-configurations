@@ -1,0 +1,16 @@
+<snippet>
+	<content><![CDATA[
+#include <stdio.h>
+
+int main() {
+	$1
+	getch();
+	return 0;
+}
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>init</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>source.c</scope>
+	<description>Estructura de un programa C</description>
+</snippet>

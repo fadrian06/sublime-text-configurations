@@ -1,0 +1,12 @@
+{
+  "font_face": "JetBrainsMono NF",
+  "integrated_output_panels": {
+    "diagnostics": {
+      "name": "Diagnostics",
+    },
+    "Terminus": {
+      "name": "Terminal",
+      "position": "bottom"
+    }
+  }
+}

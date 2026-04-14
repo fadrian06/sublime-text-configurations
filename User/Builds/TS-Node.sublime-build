@@ -1,0 +1,5 @@
+{
+	"shell_cmd": "ts-node --esm --swc -T $file_name",
+	"selector": "source.ts, source.jsx.unittest",
+	"quiet": true
+}

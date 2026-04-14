@@ -1,0 +1,10 @@
+<snippet>
+	<content><![CDATA[
+<script src="https://www.w3schools.com/appml/2.0.3/appml.js"></script>
+<script src="https://www.w3schools.com/appml/2.0.3/appml_sql.js"></script>
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>appml</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>text.html.basic - source.php</scope>
+</snippet>

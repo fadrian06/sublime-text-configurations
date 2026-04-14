@@ -1,0 +1,34 @@
+// Documentation at https://www.sublimetext.com/docs/themes.html
+{
+  "variables": {
+    "font_face": "Roboto",
+    "font_size": 13
+  },
+  "rules": [
+    {
+      "class": "sidebar_tree",
+      "row_padding": [
+        8,
+        4,
+        0,
+        4
+      ],
+      "indent": 8,
+      "indent_offset": 0
+    },
+    {
+      "class": "disclosure_button_control",
+      "layer0.texture": "Theme - Default/common/disclosure_unexpanded.png",
+      "layer0.tint": "white",
+      "layer0.opacity": {
+        "target": 0.3,
+        "speed": 4.0,
+        "interpolation": "smoothstep"
+      },
+      "content_margin": [
+        0,
+        0
+      ]
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+	"extensions":
+	[
+		"latte",
+	],
+	"indent_guide_options": [
+		"draw_normal",
+		"draw_active_single",
+		"solid"
+	]
+}

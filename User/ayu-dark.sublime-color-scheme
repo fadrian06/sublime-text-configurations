@@ -1,0 +1,278 @@
+// Documentation at https://www.sublimetext.com/docs/color_schemes.html
+{
+	"variables": {
+		"green"          : "#aad94c",
+		"light-green"    : "#C3E88D",
+		"light-blue"     : "#95e6cb",
+		"sky-blue"       : "#39bae6",
+		"light-sky-blue" : "#59c2ff",
+		"light-orange"   : "#e6b450",
+		"orange"         : "#ffb454",
+		"dark-orange"    : "#ff8f40",
+		"light-purple"   : "#d2a6ff",
+		"light-grey"     : "#bfbdb6",
+		"pink"           : "#f07178",
+		"salmon"         : "#f29668",
+		"light-salmon"   : "#e6b672",
+		"dark-pink"      : "#d95757",
+		"purple"         : "#c594c5",
+		"grey"           : "#acb6bf8c"
+	},
+	"globals": {
+    "active_guide": "var(light-blue)",
+    "stack_guide": "var(sky-blue)"
+  },
+	"rules": [
+		/////////////
+		// GENERAL //
+		/////////////
+		{
+			"name": "DocBlock",
+			"scope": "comment.block.documentation",
+			"background": "rgba(255, 255, 255, .05)"
+		},
+		
+		/////////////
+		// JSON/JS //
+		/////////////
+		{
+			"name": "Claves JSON/JS",
+			"scope": "meta.mapping.key string.quoted.(double|single)",
+			"foreground": "var(light-green)"
+		},
+		
+		///////////
+		// JS/TS //
+		///////////
+		{
+			"scope": "meta.function-call.constructor.js variable.type.js",
+			"foreground": "var(sky-blue)"
+		},
+		{
+			"name": "import JS",
+			"scope": "meta.import meta.string",
+			"font_style": "underline"
+		},
+		{
+			"scope": "constant.other.character-class.escape.backslash.regexp",
+			"foreground": "var(light-sky-blue)"
+		},
+		{
+			"scope": "entity.name.function.js variable.other.constant.js",
+			"foreground": "var(light-blue)"
+		},
+		/////////
+		// PHP //
+		/////////
+		{
+			"name": "Class static constant",
+			"scope": "variable.language.class.java",
+			"foreground": "var(dark-pink)"
+		},
+		{
+			"name": "include/require PHP",
+			"scope": "meta.include meta.string",
+			"font_style": "underline"
+		},
+		{
+			"name": "Etiquetas PHP",
+			"scope": "punctuation.section.embedded.(begin|end)",
+			"foreground": "var(dark-pink)"
+		},
+		{
+			"name": "$ PHP",
+			"scope": "punctuation.definition.variable",
+			"foreground": "var(light-blue)"
+		},
+		{
+			"name": "{} interpolation PHP",
+			"scope": "punctuation.definition.expression",
+			"foreground": "var(light-blue)"
+		},
+		{
+			"name": "fn()=> PHP",
+			"scope": "punctuation.definition.arrow-function",
+			"foreground": "var(sky-blue)"
+		},
+		{
+			"name": "Constantes de PHP",
+			"scope": "constant.class.php",
+			"foreground": "var(pink)",
+			"font_style": "italic"
+		},
+		{
+			"name": "namespace PHP",
+			"scope": "support.other.namespace.php",
+			"foreground": "var(light-green)"
+		},
+		////////////////////////
+		// CSS, SASS Y STYLUS //
+		////////////////////////
+		{
+			"name": "Etiquetas HTML en CSS y Stylus",
+			"scope": "entity.name.tag.html, entity.name.tag.stylus",
+			"foreground": "var(dark-pink)"
+		},
+		{
+			"scope": "source.scss entity.name.tag, variable.language.wildcard.asterisk.css, meta.selector.stylus entity.other.attribute-name.stylus",
+			"foreground": "var(dark-pink)"
+		},
+		{
+			"name": "PseudoElement",
+			"scope": "entity.other.attribute-name.pseudo-element",
+			"foreground": "var(light-green)"
+		},
+		{
+			"scope": "entity.other.attribute-name.pseudo-class, entity.other.pseudo-class",
+			"foreground": "var(green)"
+		},
+		{
+			"scope": "constant.color.w3c-standard-color-name",
+			"foreground": "var(dark-pink)"
+		},
+		{
+			"scope": "entity.name.function variable.other.readwrite",
+			"foreground": "var(light-blue)"
+		},
+		{
+			"scope": "variable.language.stylus",
+			"foreground": "var(dark-pink)"
+		},
+		{
+			"scope": "entity.function-name.stylus",
+			"foreground": "var(light-blue)"
+		},
+		{
+			"scope": "variable.other.animation-name.stylus",
+			"foreground": "var(green)"
+		},
+		{
+			"scope": "entity.other.animation-keyframe.stylus",
+			"foreground": "var(dark-pink)"
+		},
+		/////////
+		// ENV //
+		/////////
+		{
+			"scope": "source.env",
+			"foreground": "var(green)"
+		},
+		{
+			"scope": "variable.other.env",
+			"foreground": "var(light-sky-blue)"
+		},
+		//////////
+		// HTML //
+		//////////
+		{
+			"name": "Atributo ID",
+			"scope": "entity.other.attribute-name.id",
+			"foreground": "var(purple)"
+		},
+		{
+			"name": "Atributo CLASS",
+			"scope": "entity.other.attribute-name.class.html",
+			"foreground": "var(dark-orange)"
+		},
+		{
+			"name": "Link",
+			"scope": "meta.path.url.html meta.string.html",
+			"font_style": "underline"
+		},
+		///////////
+		// BLADE //
+		///////////
+		{
+			"scope": "entity.name.tag.other.html",
+			"foreground": "var(light-orange)"
+		},
+		/////////
+		// PUG //
+		/////////
+		{
+			"scope": "punctuation.definition.pseudo-element.css, entity.other.pseudo-element.css",
+			"foreground": "var(green)"
+		},
+		////////////
+		// SMARTY //
+		////////////
+		{
+			"scope": "punctuation.section.embedded.begin.smarty, punctuation.section.embedded.end.smarty",
+			"foreground": "var(dark-pink)"
+		},
+		/////////
+		// JSX //
+		/////////
+		{
+			"scope": "punctuation.definition.interpolation.begin.js, punctuation.definition.interpolation.end.js",
+			"foreground": "var(dark-pink)"
+		},
+		{
+			"scope": "entity.name.tag.component.js",
+			"foreground": "var(light-orange)"
+		},
+		////////////
+		// SVELTE //
+		////////////
+		{
+			"scope": "entity.name.tag.component.svelte",
+			"foreground": "var(light-orange)"
+		},
+		{
+			"scope": "text.html.svelte meta.tag.other.html entity.name.tag.other.html",
+			"foreground": "var(sky-blue)"
+		},
+		//////////////
+		// MUSTACHE //
+		//////////////
+		{
+			"scope": "entity.name.tag.mustache",
+			"foreground": "var(dark-orange)"
+		},
+		{
+			"scope": "source.mustache.embedded.html",
+			"foreground": "var(light-purple)"
+		},
+		//////////
+		// TWIG //
+		//////////
+		{
+			"scope": "punctuation.definition.statement.(begin|end).twig",
+			"foreground": "var(dark-pink)"
+		},
+		////////////
+		// PYTHON //
+		////////////
+		{
+			"scope": "comment.block.documentation.python",
+			"foreground": "var(grey)",
+			"font_style": ""
+		},
+		//////////////
+		// MARKDOWN //
+		//////////////
+		{
+			"scope": "meta.link",
+			"foreground": "var(light-blue)",
+			"font_style": "underline"
+		},
+		{
+			"scope": "markup.bold.markdown meta.link.reference.(?description.)markdown",
+			"font_style": "bold"
+		},
+		{
+			"scope": "markup.italic.markdown meta.link.reference.(?description.)markdown",
+			"font_style": "italic"
+		},
+		//////////
+		// YAML //
+		//////////
+		///////////
+		// ASTRO //
+		///////////
+		{
+			"scope": "support.class.component.astro",
+			"foreground": "var(light-orange)"
+		}
+	]
+}

@@ -1,0 +1,16 @@
+{
+	"prefixOnSave": false,
+	"browsers": [
+		"last 100 version",
+		"> 10%",
+		"> 5% in US",
+		"ie 8",
+		"ie 7",
+		"firefox 47"
+	],
+	"cascade": true,
+	"remove": true,
+	"supports": true,
+	"flexbox": true,
+	"grid": true
+}

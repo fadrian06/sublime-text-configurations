@@ -1,0 +1,9 @@
+<snippet>
+	<content><![CDATA[
+<base href="<?= str_replace('index.php', '', \$_SERVER['SCRIPT_NAME']) ?>" />
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>baseurl</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>embedding.php text.html.php</scope>
+</snippet>

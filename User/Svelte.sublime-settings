@@ -1,0 +1,11 @@
+{
+	"extensions": [
+		"svelte"
+	],
+	"lsp_format_on_save": true,
+	"indent_guide_options": [
+		"draw_normal",
+		"draw_active_single",
+		"solid"
+	]
+}

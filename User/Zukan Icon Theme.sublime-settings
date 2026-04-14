@@ -1,0 +1,79 @@
+{
+  // Show a dialog message regarding 'Restart ST' in the
+  // following cases:
+  // - First install
+  // - Rebuild files
+  // - Upgrade package
+  // - Install one or all themes
+  // - Delete one or all themes
+  //
+  // Default is true.
+  // Turn to false, if do not want to display this diablog.
+  "zukan_restart_message": true,
+  // Ignore icon option will exclude icon from building.
+  //
+  // A list of icons names can be seen in
+  // https://github.com/53v3n3d4/Zukan-Icon-Theme/blob/main/docs/file-icon.md
+  //
+  // It can be icon name or icon SVG name. E.g., to ignore
+  // Node.js icon use: "Node.js", "nodejs" or "nodejs.svg"
+  //
+  // A 'primary' tag is supported and will ignore ST theme
+  // essentials icons. Icons with tag 'primary':
+  // - file_type_binary
+  // - file_type_default
+  // - file_type_image
+  // - file_type_markup
+  // - file_type_source
+  //
+  // Example: ["nodejs",  "primary"]
+  "ignored_icon": [],
+  // This option will auto install theme in the following
+  // cases:
+  // - ST function 'add_on_change' is triggered by 'Preferences'
+  // - ST start
+  //
+  // If true, commands below will have no effect since themes
+  // will be created after deleted:
+  // - 'Zukan Icon Theme: Delete Theme'
+  // - 'Zukan Icon Theme: Delete Themes'
+  // - 'Zukan Icon Theme: Delete Syntaxes', when deleting all
+  // syntaxes, ST seems to activate 'add_on_change' on
+  // 'Preferences'. And will be followed by syntaxes and theme
+  // installs.
+  // - 'Zukan Icon Theme: Install Theme'
+  // - 'Zukan Icon Theme: Install Themes'
+  //
+  // Other commands continue to work, for example delete and
+  // create preferences.
+  //
+  // Command 'Zukan Icon Theme: Delete Syntaxes' works, but
+  // since ST activate 'add_on_change', will be followed by
+  // theme install.
+  //
+  // Default is false.
+  "auto_install_theme": true,
+  // Ignore theme option will exclude the theme name from
+  // creating an icon theme. Thus not show icons in ignored
+  // theme.
+  //
+  // You may need to restart ST for all icons show or not
+  // after changing list.
+  //
+  // Insert theme name inside square brackets.
+  //
+  // Example: ["Treble Dark.sublime-theme"]
+  "ignored_theme": [],
+  // This setting control if user want to auto upgrade
+  // preferences and syntaxes files.
+  //
+  // ST auto upgrade packages plugins. This package choose to
+  // build syntaxes and preferences based on user installed
+  // syntaxes and themes, to avoid errors about duplication
+  // or not founded syntaxes.
+  //
+  // Only data files and icons PNGs are auto updated by ST.
+  //
+  // If true, will auto rebuild icons syntaxes and preferences.
+  "rebuild_on_upgrade": true
+}

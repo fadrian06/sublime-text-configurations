@@ -1,0 +1,12 @@
+<snippet>
+	<content><![CDATA[
+<Files ${1:file.ext}>
+	Order Allow,Deny
+	Deny from all
+</Files>
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>deny</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>source.apacheconf</scope>
+</snippet>

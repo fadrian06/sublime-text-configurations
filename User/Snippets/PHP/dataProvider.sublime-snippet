@@ -1,0 +1,10 @@
+<snippet>
+	<content><![CDATA[
+@dataProvider ${1:staticMethodDataProvider}
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>@dataProvider</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>comment.block.documentation.phpdoc</scope>
+	<description>PHPUnit Data Provider</description>
+</snippet>

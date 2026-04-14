@@ -1,0 +1,13 @@
+{
+  "enabled": false,
+  "settings": {
+    "ltex.checkFrequency": "save",
+    "ltex.clearDiagnosticsWhenClosingFile": true,
+    "ltex.completionEnabled": true,
+    "ltex.diagnosticSeverity": "information",
+    "ltex.language": "auto",
+    "ltex.ltex-ls.logLevel": "fine",
+    "ltex.sentenceCacheSize": 2000,
+    "ltex.trace.server": "off",
+  },
+}

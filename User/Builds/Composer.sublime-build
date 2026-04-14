@@ -1,0 +1,37 @@
+{
+	"shell_cmd": "composer --help --no-ansi",
+	"selector": "source.json.composer",
+  "quiet": true,
+	"variants": [
+		{
+			"name": "Install All",
+			"shell_cmd": "composer install --no-progress --no-ansi",
+      "quiet": true
+		},
+		{
+			"name": "Force Install All",
+			"shell_cmd": "composer install --no-progress --ignore-platform-reqs --no-ansi",
+      "quiet": true
+		},
+		{
+			"name": "Install Production Deps",
+			"shell_cmd": "composer install --no-dev --no-progress --no-ansi",
+      "quiet": true
+		},
+		{
+			"name": "Update All",
+			"shell_cmd": "composer update --no-ansi",
+      "quiet": true
+		},
+		{
+			"name": "Dump autoloader",
+			"shell_cmd": "composer dump-autoload --no-ansi",
+      "quiet": true
+		},
+		{
+			"name": "Optimize autoloader",
+			"shell_cmd": "composer dump-autoload -o --no-ansi",
+      "quiet": true
+		}
+	]
+}

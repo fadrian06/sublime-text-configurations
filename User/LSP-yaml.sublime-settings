@@ -1,0 +1,25 @@
+// Settings in here override those in "LSP-yaml/LSP-yaml.sublime-settings"
+{
+	"enabled": true,
+	"env": {},
+	"settings": {
+		"http.proxy": null,
+		"http.proxyStrictSSL": false,
+		"yaml.completion": true,
+		"yaml.customTags": [],
+		"yaml.disableAdditionalProperties": true,
+		"yaml.editor.tabSize": 2,
+		"yaml.format.bracketSpacing": true,
+		"yaml.format.enable": true,
+		"yaml.format.printWidth": 120,
+		"yaml.format.proseWrap": "preserve",
+		"yaml.format.singleQuote": true,
+		"yaml.hover": true,
+		"yaml.maxItemsComputed": 5000,
+		"yaml.schemaStore.enable": true,
+		"yaml.schemaStore.url": "https://www.schemastore.org/api/json/catalog.json",
+		"yaml.schemas": {},
+		"yaml.validate": true
+	},
+	"selector": "(source.yml | source.yaml | source.neon) - (source.yaml.go | source.yaml.helm | source.yaml.esphome)",
+}

@@ -1,0 +1,13 @@
+// Settings in here override those in "LSP-stylelint/LSP-stylelint.sublime-settings"
+{
+  "settings": {
+    "stylelint.validate": [
+      "css",
+      "less",
+      "postcss",
+      "svelte"
+    ],
+  },
+  "selector": "source.css | source.scss | source.less | text.html.vue",
+  "enabled": false,
+}

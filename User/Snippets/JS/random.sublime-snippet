@@ -1,0 +1,10 @@
+<snippet>
+	<content><![CDATA[
+(/** @type {number} */ min, /** @type {number} */ max) => Math.floor(Math.random() * (max - min + 1)) + min
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>random</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>source.js, source.ts, source.jsx, source.tsx</scope>
+	<description>Function to generate a random int number</description>
+</snippet>

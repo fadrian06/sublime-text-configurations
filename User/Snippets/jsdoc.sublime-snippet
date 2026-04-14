@@ -1,0 +1,74 @@
+<snippet>
+<!--
+    Fields: $field_number or ${field_number:default_text}, e.g. $1 or ${1:name}
+    Variables: $variable or ${variable/regex/replace/flags}, e.g. $TM_FILEPATH
+    More: https://www.sublimetext.com/docs/completions.html#snippets
+-->
+<content><![CDATA[
+{
+	"plugins": [
+		"plugins/markdown",
+		"plugins/summarize"
+	],
+	"markdown": {
+		"tags": ["foo", "bar"],
+		"excludeTags": ["author"],
+		"hardwrap": true,
+		"idInHeading": true
+	},
+	"recurseDepth": 10,
+	"source": {
+		"include": [
+			"myProject/a.js",
+			"myProject/lib",
+			"myProject/_private"
+		],
+		"exclude": [
+			"myProject/lib/ignore.js"
+		],
+		"includePattern": ".+\\.js(doc|x)?\$",
+		"excludePattern": "(^|\\/|\\\\)_"
+	},
+	"sourceType": "module",
+	"tags": {
+		"allowUnknownTags": true,
+		"dictionaries": [
+			"jsdoc",
+			"closure"
+		]
+	},
+	"templates": {
+		"cleverLinks": false,
+		"monospaceLinks": false,
+		"default": {
+			"staticFiles": {
+				"include": ["./myProject/static"],
+				"exclude": [],
+				"includePattern": "",
+				"excludePattern": ""
+			},
+			"includeDate": true,
+			"useLongnameInNav": false,
+			"layoutFile": "layout.tmpl",
+			"outputSourceFiles": true
+		}
+	},
+	"opts": {
+		"template": "templates/default",
+		"encoding": "utf8",
+		"destination": "./out/",
+		"recurse": true,
+		"tutorials": "path/to/tutorials",
+		"package": "",
+		"readme": "",
+		"access": "all",
+		"debug": false,
+		"pedantic": false,
+		"test": false
+	}
+}
+]]></content>
+<tabTrigger>jsdoc</tabTrigger>
+<description>JSDoc Config Template</description>
+<scope>source.json</scope>
+</snippet>

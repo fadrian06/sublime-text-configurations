@@ -1,0 +1,22 @@
+{
+	"default": {
+		"debug": false,
+		"distribution_mode": "latest",
+		"tooltip": true,
+		"supported_filenames": [
+			"package.json"
+		],
+		"registry": "https://registry.npmjs.org",
+		"dependency_fields": [
+			"dependencies",
+			"devDependencies",
+			"peerDependencies",
+			"optionalDependencies"
+		],
+		"tooltip_styles": {
+			"version_color": "#FFFFFF",
+			"package_color": "#76C1BA",
+			"background": "#253238"
+		}
+	}
+}

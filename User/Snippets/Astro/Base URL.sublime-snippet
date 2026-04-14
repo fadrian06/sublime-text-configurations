@@ -1,0 +1,8 @@
+<snippet>
+	<content><![CDATA[
+<base href={`\${import.meta.env.BASE_URL}`} />]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>baseurl</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>text.html.basic - source.php, text.html.handlebars, text.html.blade, source.astro</scope>
+</snippet>

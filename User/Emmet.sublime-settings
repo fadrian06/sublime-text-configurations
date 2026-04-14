@@ -1,0 +1,21 @@
+{
+	"auto_mark": "markup",
+	"abbreviation_preview": "markup",
+	"auto_id_class": false,
+	"markup_style": "xhtml",
+	"config": {
+		"markup": {
+			"options": {
+				"output.selfClosingStyle": "xhtml"
+			}
+		}
+	},
+	"telemetry": true,
+	"uid": "8a13681d-90ba-4257-ae08-6a9f166c125c",
+	"ignore_scopes": [
+		"source.jsx",
+		"source.tsx",
+		"text.html.ngx",
+		"source.js"
+	]
+}

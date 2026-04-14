@@ -1,0 +1,35 @@
+// Settings in here override those in "LSP-astro/LSP-astro.sublime-settings"
+{
+  "experimental_capabilities": {},
+  "initializationOptions": {
+    "diagnosticModel": 2,
+    "typescript.tsdk": ""
+  },
+  "settings": {
+    "astro.css.completions.emmet": true,
+    "astro.css.completions.enabled": true,
+    "astro.css.documentColors.enabled": true,
+    "astro.css.documentSymbols.enabled": true,
+    "astro.css.enabled": true,
+    "astro.css.hover.enabled": true,
+    "astro.format.indentFrontmatter": false,
+    "astro.format.newLineAfterFrontmatter": true,
+    "astro.html.completions.emmet": true,
+    "astro.html.completions.enabled": true,
+    "astro.html.documentSymbols.enabled": true,
+    "astro.html.enabled": true,
+    "astro.html.hover.enabled": true,
+    "astro.html.tagComplete.enabled": true,
+    "astro.typescript.allowArbitraryAttributes": false,
+    "astro.typescript.codeActions.enabled": true,
+    "astro.typescript.completions.enabled": true,
+    "astro.typescript.definitions.enabled": true,
+    "astro.typescript.diagnostics.enabled": true,
+    "astro.typescript.documentSymbols.enabled": true,
+    "astro.typescript.enabled": true,
+    "astro.typescript.hover.enabled": true,
+    "astro.typescript.rename.enabled": true,
+    "astro.typescript.semanticTokens.enabled": true,
+    "astro.typescript.signatureHelp.enabled": true,
+  }
+}

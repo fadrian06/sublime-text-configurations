@@ -1,0 +1,10 @@
+<snippet>
+	<content><![CDATA[
+<link rel="stylesheet" href="https://unpkg.com/ed-grid@3.0.2/src/css/ed-grid.min.css">
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>edgrid</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>text.html.basic - source.php</scope>
+	<description>EDGrid Framework</description>
+</snippet>

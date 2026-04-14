@@ -1,0 +1,12 @@
+{
+	"shell_cmd": "lessc $file_name --js $file_base_name.css --source-map",
+	"selector": "source.less",
+	"quiet": true,
+	"variants": [
+		{
+			"name": "Compress",
+			"shell_cmd": "lessc $file_name --js $file_base_name.css --source-map -x",
+			"quiet": true
+		}
+	]
+}

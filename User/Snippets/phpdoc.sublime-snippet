@@ -1,0 +1,25 @@
+<snippet>
+<!--
+    Fields: $field_number or ${field_number:default_text}, e.g. $1 or ${1:name}
+    Variables: $variable or ${variable/regex/replace/flags}, e.g. $TM_FILEPATH
+    More: https://www.sublimetext.com/docs/completions.html#snippets
+-->
+<content><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<phpdocumentor
+	configVersion="3"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="https://www.phpdoc.org"
+>
+	<title>phpDocumentor</title>
+	<paths>
+		<output>docs/.build</output>
+		<cache>.phpdoc</cache>
+	</paths>
+
+</phpdocumentor>
+]]></content>
+<tabTrigger>phpdoc</tabTrigger>
+<description>PHPDoc Configuration Template</description>
+<scope>text.xml</scope>
+</snippet>

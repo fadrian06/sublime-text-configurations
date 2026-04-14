@@ -1,0 +1,10 @@
+<snippet>
+	<content><![CDATA[
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/css-loader/3.3.3/css-loader.css" />
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>loaders</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>text.html.basic, text.html.blade, text.html.php</scope>
+	<description>LoadersCSS CDN</description>
+</snippet>

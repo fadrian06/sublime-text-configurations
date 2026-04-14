@@ -1,0 +1,247 @@
+<snippet>
+<content><![CDATA[
+parameters:
+	level: 6
+	paths:
+		- src
+		- tests
+	errorFormat: prettyJson
+	
+	typeAliases:
+		Name: 'string'
+		NameResolver: 'callable(): string'
+		NameOrResolver: 'Name|NameResolver'
+	
+	phpVersion: 70400 # PHP 7.4
+	
+	# When set to true, it reports instanceof occurrences always evaluated to true.
+	checkAlwaysTrueInstanceof: true
+	
+	# When set to true, it reports occurrences of type-checking functions always evaluated to true.
+	checkAlwaysTrueCheckTypeFunctionCall: true
+	
+	# When set to true, it reports === and !== occurrences always evaluated to true.
+	checkAlwaysTrueStrictComparison: true
+	
+	# When set to false it prevents reading variables set in for loop initial statement and while loop condition after the loop.
+	polluteScopeWithLoopInitialAssignments: false
+	
+	# When set to false it prevents reading key and value variables set in foreach when iterating over a non-empty array.
+	polluteScopeWithAlwaysIterableForeach: false
+	
+	# When set to true, it reports code paths with missing return statement in functions and methods with @return mixed PHPDoc.
+	checkExplicitMixedMissingReturn: true
+	
+	# When set to true, it reports function and method calls with incorrect name case.
+	checkFunctionNameCase: true
+	
+	# When set to true, it reports references to built-in classes with incorrect name case.
+	checkInternalClassCaseSensitivity: true
+	
+	# When set to true, it reports violations of parameter type contravariance and return type covariance. By default, PHPStan only reports completely incompatible types in signatures.
+	reportMaybesInMethodSignatures: true
+	
+	# When set to true, it reports violations of property type invariance. By default, PHPStan only reports completely incompatible PHPDoc typescheckInternalClassCaseSensitivity.
+	reportMaybesInPropertyPhpDocTypes: true
+	
+	# When set to true, it reports violations of parameter type contravariance and return type covariance in static methods.
+	reportStaticMethodSignatures: true
+	
+	# When set to true, it reports return typehints that could be narrowed down because some of the listed types are never returned from a public or protected method. For private methods PHPStan does this by default.
+	# public function doFoo(): ?string {
+	# 	// Method Foo::doFoo() never returns null so it can be removed from the return typehint.
+	# 	return 'str';
+	# }
+	checkTooWideReturnTypesInProtectedAndPublicMethods: true
+	
+	# When set to true, it reports properties with native types that weren’t initialized in the class constructor.
+	# // "Class has an uninitialized property \$bar. Give it default value or assign it in the constructor."
+	# private int \$foo;
+
+	# public function setFoo(int \$foo): void {
+	# 	\$this->foo = \$foo;
+	# }
+	checkUninitializedProperties: true
+	
+	# When set to true, it reports use of dynamic properties as undefined.
+	checkDynamicProperties: false
+	
+	# By default, PHPStan considers all functions that return a value to be pure. That means that second call to the same function in the same scope will return the same narrowed type:
+	# public function getName(): string {
+	#     return \$this->name;
+	# }
+	# if (\$this->getName() === 'Foo') {
+	#     echo \$this->getName(); // still 'Foo'
+	# }
+	# This is a sane default in case of getters but sometimes we have a function that can return different values based on a global state like a random number generator, database, or time.
+	# public function getRandomNumber(): int {
+	#     return rand();
+	# }
+	# if (\$this->getRandomNumber() === 4) {
+	#     echo \$this->getRandomNumber(); // it's not going to be 4 but PHPStan will think it is
+	# }
+	# You can mark getRandomNumber() with /** @phpstan-impure */ but if you have many functions like this in your codebase and don’t want to assume functions return the same value when called multiple times, you can set rememberPossiblyImpureFunctionValues to false
+	rememberPossiblyImpureFunctionValues: true
+	
+	# When set to true, PHPStan is strict about values with an unspecified (implicit mixed) type. It enables the same checks for values with no type specified that rule level 9 enables for explicitly specified mixed type values.
+	checkImplicitMixed: true
+	
+	# PHPStan defines benevolent union types, such as array-key. Benevolent unions aren’t checked strictly even at the highest level:
+	# public function requireInt(int \$value): void {}
+	# public function requireString(string \$value): void {}
+	# /**
+	#  * @param array-key  \$value1 // array-key is a benevolent union (int|string)
+	#  * @param int|string \$value2
+	#  */
+	# public function test(\$value1, int|string \$value2): int {
+	#     \$this->requireInt(\$value1);    // No error
+	#     \$this->requireString(\$value1); // No error
+	#     \$this->requireInt(\$value2);    // Error
+	#     \$this->requireString(\$value2); // Error
+	# }
+	# Enable stricter analysis of benevolent union types with the checkBenevolentUnionTypes option (needs level 7 or higher):
+	checkBenevolentUnionTypes: false
+	
+	# By default PHPStan does not report always true last condition in a series of elseif branches and match expression arms:
+	# // \$o is A|B
+	# if (\$o instanceof A) {
+	#     // ...
+	# } elseif (\$o instanceof B) { // "Instanceof between B and B will always evaluate to true." IS NOT reported
+	#     // ...
+	# }
+	# By setting reportAlwaysTrueInLastCondition to true the error in elseif will be reported.
+	reportAlwaysTrueInLastCondition: true
+	
+	# By default PHPStan reports wrong type in @var tag only for native types on the right side of =. With reportWrongPhpDocTypeInVarTag set to true it will consider PHPDoc types too.
+	# This effectively means that inline @var cast can only be used to narrow down original types. PHPStan offers many utilities to use instead:
+	#     Conditional return types
+	#     @phpstan-assert
+	#     Generics
+	#     Stub files for overriding 3rd party PHPDocs
+	#     Dynamic return type extensions
+	reportWrongPhpDocTypeInVarTag: true
+	
+	# Level 6 checks for missing typehints. Not only it reports when there’s no typehing at all, but also when it’s not specific enough. PHPStan needs to know about array item types. So array isn’t specific enough but int[] is.
+	# If you want to use level 6 to report missing typehints, but are fine with array instead of int[]
+	checkMissingIterableValueType: true
+	
+	# If you’re using generics, another thing that level 6 does is that it requires type variables always be specified in typehints. So ReflectionClass isn’t sufficient but ReflectionClass<Foo> is.
+	checkGenericClassInNonGenericObjectType: true
+	
+	# If you use callables, you might find that callable or \Closure is too vague for your liking. For example, PHPStan won’t complain if you pass callable(int) : void to callable, but it will complain if you pass callable(int) : void to callable(string) : void. So, being specific with callable signatures helps PHPStan find more bugs.
+	# However, by default PHPStan won’t complain if you don’t specify a signature for a callable or closure.
+	checkMissingCallableSignature: true
+	
+	# When set to true, it doesn’t require typehints for properties if the types can be inferred from constructor injection:
+	# private \$foo; // PHPStan infers \$foo to be Foo
+	# public function __construct(Foo \$foo) {
+	# 	\$this->foo = \$foo;
+	# }
+	inferPrivatePropertyTypeFromConstructor: false
+	
+	# PHPStan by default doesn’t differentiate between PHPDoc and native types. It considers them both as certain.
+	# This might not be what you want in case you’re writing a library whose users might pass a wrong argument type to a function. Setting treatPhpDocTypesAsCertain to false relaxes some of the rules around type-checking.
+	treatPhpDocTypesAsCertain: true
+	
+	# From time to time, PHPStan shows “💡 Tips of the Day” at the end of a successful analysis.
+	tipsOfTheDay: true
+	
+	exceptions:
+		check:
+			# To have a missing @throws with a checked exception above a function reported
+			missingCheckedExceptionInThrows: true
+			
+			# When @throws contains an exception that isn’t thrown in the function body, PHPStan can report it
+			tooWideThrowType: true
+			
+			# PHPStan needs to be careful with interpreting of the existing code. No tool until now has forced developers to dutifully document their exceptions so absent @throws tag can mean two different things:
+			#     Function throws some undocumented exceptions
+			#     Function doesn’t throw any exception
+			# The first option is safer so that’s what PHPStan does by default. In this mode you can write @throws void to mark a function that definitely doesn’t throw an exception.
+			# implicitThrows: true
+	
+	strictRules:
+		allRules: false
+	
+		# Disallow short ternary operator (?:) - implies weak comparison, it's recommended to use null coalesce operator (??) or ternary operator with strict condition.
+		disallowedLooseComparison: false
+		
+		# Require booleans in if, elseif, ternary operator, after !, and on both sides of && and ||.
+		booleansInConditions: false
+		
+		uselessCast: true
+		
+		# Require calling parent constructor
+		requireParentConstructorCall: true
+		
+		# Disallow empty() - it's a very loose comparison (see https://php.net/empty), it's recommended to use more strict one.
+		disallowedConstructs: false
+		
+		# Variables assigned in while loop condition and for loop initial assignment cannot be used after the loop.
+		overwriteVariablesWithLoop: true
+		
+		# Closure should use \$this directly instead of using \$this variable indirectly
+		closureUsesThis: true
+		
+		# Correct case for inherited and implemented method names.
+		matchingInheritedMethodNames: true
+		
+		# Require numeric operands or arrays in + and numeric operands in -/*///**/%.
+		numericOperandsInArithmeticOperators: true
+		
+		# These functions contain a \$strict parameter for better type safety, it must be set to true:
+    # in_array (3rd parameter)
+    # array_search (3rd parameter)
+    # array_keys (3rd parameter; only if the 2nd parameter \$search_value is provided)
+    # base64_decode (2nd parameter)
+		strictCalls: false
+		
+		# Types in switch condition and case value must match. PHP compares them loosely by default and that can lead to unexpected results.
+		switchConditionsMatchingType: true
+		
+		# Disallow variable variables (\$\$foo, \$this->\$method() etc.)
+		noVariableVariables: false
+	
+	featureToggles:
+		bleedingEdge: true
+		skipCheckGenericClasses!: []
+		explicitMixedInUnknownGenericNew: false
+		explicitMixedForGlobalVariables: false
+		explicitMixedViaIsArray: false
+		arrayFilter: true
+		arrayUnpacking: true
+		nodeConnectingVisitorCompatibility: false
+		nodeConnectingVisitorRule: true
+		disableCheckMissingIterableValueType: false
+		strictUnnecessaryNullsafePropertyFetch: true
+		looseComparison: false
+		consistentConstructor: true
+		checkUnresolvableParameterTypes: true
+		readOnlyByPhpDoc: true
+		phpDocParserRequireWhitespaceBeforeDescription: true
+		runtimeReflectionRules: true
+		notAnalysedTrait: false
+		curlSetOptTypes: true
+		listType: true
+		missingMagicSerializationRule: false
+		nullContextForVoidReturningFunctions: false
+		unescapeStrings: false
+		duplicateStubs: false
+		invarianceComposition: true
+		alwaysTrueAlwaysReported: true
+		disableUnreachableBranchesRules: true
+		varTagType: true
+		closureDefaultParameterTypeRule: true
+		newRuleLevelHelper: true
+		instanceofType: true
+		paramOutVariance: true
+		allInvalidPhpDocs: false
+		strictStaticMethodTemplateTypeVariance: true
+		propertyVariance: true
+		genericPrototypeMessage: true
+		stricterFunctionMap: true
+]]></content>
+<tabTrigger>base</tabTrigger>
+<description>Base PHPStan Configuration</description>
+<scope>source.neon</scope>
+</snippet>

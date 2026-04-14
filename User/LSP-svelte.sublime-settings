@@ -1,0 +1,23 @@
+// Settings in here override those in "LSP-svelte/LSP-svelte.sublime-settings"
+{
+  "initializationOptions": {
+    "configuration": {
+      "svelte": {
+        "plugin": {
+          "css": {
+            "documentColors": {
+              "enable": false,
+            },
+          },
+          "svelte": {
+            "useNewTransformation": true,
+          },
+        },
+      },
+    },
+  },
+  "settings": {
+    "svelte.plugin.svelte.format.config.singleQuote": true,
+  },
+  "enabled": true,
+}

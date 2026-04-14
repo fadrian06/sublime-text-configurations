@@ -1,0 +1,10 @@
+<snippet>
+	<content><![CDATA[
+class-string${1:<${2:\Namespace\ClassName}>}
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>class-string</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>comment.block.documentation.phpdoc</scope>
+	<description>Class String Type</description>
+</snippet>

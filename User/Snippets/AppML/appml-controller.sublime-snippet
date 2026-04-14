@@ -1,0 +1,13 @@
+<snippet>
+<!--
+    Fields: $field_number or ${field_number:default_text}, e.g. $1 or ${1:name}
+    Variables: $variable or ${variable/regex/replace/flags}, e.g. $TM_FILEPATH
+    More: https://www.sublimetext.com/docs/completions.html#snippets
+-->
+<content><![CDATA[
+appml-controller="${1:controllerJSFunction}"
+]]></content>
+<tabTrigger>appml-controller</tabTrigger>
+<scope>text.html.basic meta.tag.(inline|block).any.html</scope>
+<description>Fetch data from ...</description>
+</snippet>

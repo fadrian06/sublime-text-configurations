@@ -1,0 +1,14 @@
+<snippet>
+	<content><![CDATA[
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	
+	# Rewrite /foo/bar to /foo/bar.${1:ext}
+	RewriteRule ^([^.?]+)\$ %{REQUEST_URI}.${1:ext} [L]
+</IfModule>
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>hide</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>source.apacheconf</scope>
+</snippet>

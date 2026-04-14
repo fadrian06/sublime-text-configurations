@@ -1,0 +1,13 @@
+<snippet>
+	<!--
+    Fields: $field_number or ${field_number:default_text}, e.g. $1 or ${1:name}
+    Variables: $variable or ${variable/regex/replace/flags}, e.g. $TM_FILEPATH
+    More: https://www.sublimetext.com/docs/completions.html#snippets
+-->
+	<content><![CDATA[
+w3-include-html="${1:source.html}"
+]]></content>
+	<tabTrigger>w3-include-html</tabTrigger>
+	<scope>text.html.basic meta.tag.(block|inline).any.html</scope>
+	<description>Includes an HTML File</description>
+</snippet>

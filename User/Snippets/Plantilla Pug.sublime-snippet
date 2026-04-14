@@ -1,0 +1,20 @@
+<snippet>
+	<content><![CDATA[
+doctype html
+html
+	head
+		meta(charset="utf-8")
+		meta(name="viewport" content="width=device-width")
+		title $1
+		link(rel="icon" href="$2")
+		link(rel="stylesheet" href="$3")
+	body
+		$4
+		script(src="$5")
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>plantilla</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>text.pug</scope>
+	<description>Pug</description>
+</snippet>

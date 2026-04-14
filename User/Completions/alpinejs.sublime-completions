@@ -1,0 +1,95 @@
+{
+  "scope": "text.html.(alpinejs|basic) meta.tag.(block|inline).(any|form).html",
+  "completions": [
+    {
+      "trigger": "x-data",
+      "contents": "x-data=\"{ $1 }\"",
+      "details": "Data",
+      "annotation": "x-data"
+    },
+    {
+      "trigger": "x-bind",
+      "contents": "x-bind:$1=\"$2\"",
+      "details": "Binding",
+      "annotation": "x-bind"
+    },
+    {
+      "trigger": "x-on",
+      "contents": "x-on:$1=\"$2\"",
+      "details": "Event",
+      "annotation": "x-on"
+    },
+    {
+      "trigger": "x-text",
+      "contents": "x-text=\"$1\"",
+      "details": "Text",
+      "annotation": "x-text"
+    },
+    {
+      "trigger": "x-html",
+      "contents": "x-html=\"$1\"",
+      "details": "HTML",
+      "annotation": "x-html"
+    },
+    {
+      "trigger": "x-model",
+      "contents": "x-model=\"$1\"",
+      "details": "Model",
+      "annotation": "x-model"
+    },
+    {
+      "trigger": "x-show",
+      "contents": "x-show=\"$1\"",
+      "details": "Show",
+      "annotation": "x-show"
+    },
+    {
+      "trigger": "x-transition",
+      "contents": "x-transition:$1=\"$2\"",
+      "details": "Transition",
+      "annotation": "x-transition"
+    },
+    {
+      "trigger": "x-for",
+      "contents": "x-for=\"${1:item} in ${2:items}\"",
+      "details": "For",
+      "annotation": "x-for"
+    },
+    {
+      "trigger": "x-if",
+      "contents": "x-if=\"$1\"",
+      "details": "If",
+      "annotation": "x-if"
+    },
+    {
+      "trigger": "x-init",
+      "contents": "x-init=\"$1\"",
+      "details": "Init",
+      "annotation": "x-init"
+    },
+    {
+      "trigger": "x-effect",
+      "contents": "x-effect=\"$1\"",
+      "details": "Effect",
+      "annotation": "x-effect"
+    },
+    {
+      "trigger": "x-ref",
+      "contents": "x-ref=\"$1\"",
+      "details": "Ref",
+      "annotation": "x-ref"
+    },
+    {
+      "trigger": "x-cloak",
+      "contents": "x-cloak",
+      "details": "Cloak",
+      "annotation": "x-cloak"
+    },
+    {
+      "trigger": "x-ignore",
+      "contents": "x-ignore",
+      "details": "Ignore",
+      "annotation": "x-ignore"
+    }
+  ]
+}

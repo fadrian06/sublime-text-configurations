@@ -1,0 +1,11 @@
+{
+	"shell_cmd": "g++ \"$file_name\" -o \"$file_base_name.exe\"",
+	"quiet": true,
+	"selector": "source.c++",
+	"variants": [
+		{
+			"name": "Compile + Run",
+			"shell_cmd": "g++ \"$file_name\" -o \"$file_base_name.exe\" && start cmd /K \"$file_base_name.exe\" ^& pause ^& exit"
+		}
+	]
+}

@@ -1,0 +1,19 @@
+<snippet>
+	<content><![CDATA[
+<!-- JQUERY -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"></script>
+<script src="https://code.jquery.com/jquery-4.0.0-beta.min.js"></script>
+<!-- JQUERY UI -->
+<script src="https://code.jquery.com/ui/1.13.3/jquery-ui.min.js"></script>
+<!-- JQUERY Mobile -->
+<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+<link rel="stylesheet" href="https://releases.jquery.com/undefined/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+<!-- JQUERY Colors -->
+<script src="https://code.jquery.com/color/jquery.color.plus-names-2.2.0.min.js"></script>
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>jquery</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>text.html.basic - source.php</scope>
+</snippet>

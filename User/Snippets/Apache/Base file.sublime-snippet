@@ -1,0 +1,16 @@
+<snippet>
+	<content><![CDATA[
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	
+	RewriteCond \${REQUEST_FILENAME} !-f
+	RewriteCond \${REQUEST_FILENAME} !-d
+	
+	RewriteRule ^(.*)\$ ${1:file.ext} [QSA,L]
+</IfModule>
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>base</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>source.apacheconf</scope>
+</snippet>

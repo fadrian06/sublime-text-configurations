@@ -1,0 +1,18 @@
+{
+	"shell_cmd": "tsc --module es6 \"$file_name\" --outDir \".output/\" --sourceMap --strict && rollup --file=./bundle.js --strictDeprecations -m inline -- \"./.output/$file_base_name.js\"",
+	"selector": "source.ts, source.js",
+	"variants": [
+		{
+			"name": "Watch",
+			"shell_cmd": "tsc --module es6 \"$file_name\" --outDir \".output/\" --sourceMap --strict && start rollup -w --file=./bundle.js --strictDeprecations -m inline -- \"./.output/$file_base_name.js\" && tsc --module es6 \"$file_name\" --outDir \".output/\" --sourceMap --strict --watch",
+		},
+		{
+			"name": "Check JS",
+			"shell_cmd": "tsc \"$file_name\" --outFile \"$file_base_name.js\" --sourceMap --allowJs --checkJs --strict"
+		},
+		{
+			"name": "Build",
+			"shell_cmd": "tsc --module es6 \"$file_name\" --outDir \".output/\" --target es6 --removeComments --strict && rollup --file=bundle.js --strictDeprecations --no-strict --compact --environment INCLUDE_DEPS,BUILD:production -- \"./.output/$file_base_name.js\" && babel --minified --compact true --no-comments --env-name production --config-file \"C:/Program Files/nodejs/node_modules/@babel/babel.config.json\" \"bundle.js\" -o \"bundle.js\" && RD /S /Q .output && tsc --outDir \"./.declarations/\" -d --emitDeclarationOnly \"$file_name\""
+		}
+	]
+}

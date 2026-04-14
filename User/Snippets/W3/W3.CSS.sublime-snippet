@@ -1,0 +1,9 @@
+<snippet>
+	<content><![CDATA[
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>w3css</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>text.html.basic, embedding.php</scope>
+</snippet>

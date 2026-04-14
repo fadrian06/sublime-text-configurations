@@ -1,0 +1,10 @@
+{
+	"shell_cmd": "start cmd /k",
+	"quiet": true,
+	"variants": [
+		{
+			"name": "Git Bash",
+			"shell_cmd": "git-bash"
+		}
+	]
+}

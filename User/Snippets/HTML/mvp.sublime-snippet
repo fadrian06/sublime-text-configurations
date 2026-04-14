@@ -1,0 +1,8 @@
+<snippet>
+<content><![CDATA[
+<link rel="stylesheet" href="https://unpkg.com/mvp.css" />
+]]></content>
+<tabTrigger>mvp</tabTrigger>
+<scope>text.html.basic - source.php, embedding.php</scope>
+<description>MVP.css Styles</description>
+</snippet>

@@ -1,0 +1,85 @@
+// Documentation at https://www.sublimetext.com/docs/color_schemes.html
+{
+  "variables": {
+    "c-black": "#000",
+    "c-blue": "#326bcd",
+    "blue2": "#0451a4",
+    "blue3": "#0074c2",
+    "blue4": "#000f80",
+    "blue5": "#267d97",
+    "blue6": "#000080",
+    "blue7": "#00f",
+    "blue8": "#24292e",
+    "c-cyan": "#098658",
+    "cyan2": "#328166",
+    "c-green": "#008000",
+    "c-orange": "#cd9732",
+    "orange2": "#785d26",
+    "c-pink": "#800080",
+    "c-purple": "#af00db",
+    "c-red": "#d16b6b",
+    "red2": "#800000",
+    "red3": "#9e0000",
+    "red4": "#a21515",
+    "red5": "#cd3232",
+    "red6": "#f00",
+    "red7": "#7f1f3f",
+    "c-white": "#fff",
+    "white2": "#ebebeb",
+    "c-yellow": "#65a300"
+  },
+  "globals": {
+    "active_guide": "var(blue5)",
+    "stack_guide": "color(var(blue5) alpha(0.5))"
+  },
+  "rules": [
+    {
+      "scope": "",
+      "font_style": "bold"
+    },
+    {
+      "scope": "meta.path.url.html",
+      "font_style": "bold underline"
+    },
+    {
+      "scope": "string.quoted.(single|double)",
+      "foreground": "var(c-green)"
+    },
+    {
+      "scope": "meta.mapping.key string.quoted.double",
+      "foreground": "var(c-yellow)"
+    },
+    {
+      "scope": "comment.(block|line)",
+      "font_style": "italic"
+    },
+    {
+      "scope": "markup.raw.inline.markdown, markup.raw.code-fence.(php|python).markdown-gfm",
+      "background": "rgba(0,0,0,.05)"
+    },
+    {
+      "scope": "meta.function-call variable.function",
+      "font_style": "bold italic"
+    },
+    {
+      "scope": "constant.other.placeholder, keyword.operator",
+      "foreground": "var(red2)"
+    },
+    {
+      "scope": "meta.toc-list.id.html",
+      "font_style": "bold underline"
+    },
+    {
+      "scope": "entity.name.other.group.regexp",
+      "foreground": "var(blue5)"
+    },
+    {
+      "scope": "meta.tag.component.any.html entity.name.tag.inline.form.html",
+      "foreground": "var(blue5)"
+    },
+    {
+      "scope": "entity.name.tag.component.js",
+      "foreground": "var(blue5)"
+    }
+  ]
+}

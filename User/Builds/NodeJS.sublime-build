@@ -1,0 +1,12 @@
+{
+	"shell_cmd": "node \"$file_name\"",
+	"selector": "source.js - text.jade",
+	"quiet": true,
+	"variants": [
+		{
+			"name": "Watch",
+			"shell_cmd": "nodemon \"$file_name\" -q",
+			"quiet": true
+		}
+	]
+}

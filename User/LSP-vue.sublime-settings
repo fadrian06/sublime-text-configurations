@@ -1,0 +1,93 @@
+// Settings in here override those in "LSP-vue/LSP-vue.sublime-settings"
+{
+  "disabled_capabilities": {
+    "colorProvider": true
+  },
+  "settings": {
+    "css": {
+      "validate": true,
+      "completion": {
+        "triggerPropertyValueCompletion": true,
+        "completePropertyWithSemicolon": true,
+      },
+      "customData": [],
+      "lint": {
+        "compatibleVendorPrefixes": "warning",
+        "vendorPrefix": "warning",
+        "duplicateProperties": "warning",
+        "emptyRules": "warning",
+        "importStatement": "warning",
+        "boxModel": "warning",
+        "universalSelector": "warning",
+        "zeroUnits": "warning",
+        "fontFaceProperties": "warning",
+        "hexColorLength": "error",
+        "argumentsInColorFunction": "error",
+        "unknownProperties": "warning",
+        "validProperties": [],
+        "ieHack": "warning",
+        "unknownVendorSpecificProperties": "warning",
+        "propertyIgnoredDueToDisplay": "warning",
+        "important": "warning",
+        "float": "warning",
+        "idSelector": "warning",
+        "unknownAtRules": "warning",
+      },
+    },
+    "emmet": {},
+    "html": {
+      "suggest": {}
+    },
+    "javascript": {
+      "format": {}
+    },
+    "stylusSupremacy": {},
+    "typescript": {
+      "format": {}
+    },
+    "vetur.completion.autoImport": true,
+    "vetur.completion.scaffoldSnippetSources": {
+      "user": "👨",
+      "vetur": "✌",
+      "workspace": "💼"
+    },
+    "vetur.completion.tagCasing": "kebab",
+    "vetur.experimental.templateInterpolationService": true,
+    "vetur.format.defaultFormatter.css": "prettier",
+    "vetur.format.defaultFormatter.html": "prettyhtml",
+    "vetur.format.defaultFormatter.js": "prettier",
+    "vetur.format.defaultFormatter.less": "prettier",
+    "vetur.format.defaultFormatter.postcss": "prettier",
+    "vetur.format.defaultFormatter.pug": "prettier",
+    "vetur.format.defaultFormatter.sass": "sass-formatter",
+    "vetur.format.defaultFormatter.scss": "prettier",
+    "vetur.format.defaultFormatter.stylus": "stylus-supremacy",
+    "vetur.format.defaultFormatter.ts": "prettier",
+    "vetur.format.defaultFormatterOptions": {
+      "js-beautify-html": {
+        "wrap_attributes": "force-expand-multiline"
+      },
+      "prettyhtml": {
+        "printWidth": 80,
+        "singleQuote": false,
+        "sortAttributes": true,
+        "wrapAttributes": false
+      },
+      "prettier": {}
+    },
+    "vetur.format.enable": true,
+    "vetur.format.options.tabSize": 2,
+    "vetur.format.options.useTabs": false,
+    "vetur.format.scriptInitialIndent": true,
+    "vetur.format.styleInitialIndent": true,
+    "vetur.ignoreProjectWarning": false,
+    "vetur.languageFeatures.codeActions": true,
+    "vetur.useWorkspaceDependencies": true,
+    "vetur.validation.interpolation": true,
+    "vetur.validation.script": true,
+    "vetur.validation.style": true,
+    "vetur.validation.template": true,
+    "vetur.validation.templateProps": true,
+    "vetur.languageFeatures.updateImportOnFileMove": true
+  }
+}

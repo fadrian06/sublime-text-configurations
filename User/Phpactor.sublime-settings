@@ -1,0 +1,53 @@
+{
+  "phpactor_bin": "C:/bin/phpactor/vendor/bin/phpactor.bat",
+  "command_settings": {
+    "references": {
+      "filesystem": "git"
+    },
+    "complete": {
+      "enabled": false
+    }
+  },
+  "sidebar_menu_settings": {
+    "new_php_class": {
+      "enabled": true
+    },
+    "copy_php_class": {
+      "enabled": true
+    },
+    "move_php_class": {
+      "enabled": true
+    },
+    "inflect_php_class": {
+      "enabled": true
+    },
+    "copy_absolute_path": {
+      "enabled": true
+    },
+    "copy_relative_path": {
+      "enabled": true
+    }
+  },
+  "tab_context_menu_settings": {
+    "reveal_in_side_bar": {
+      "enabled": true
+    },
+    "copy_absolute_path": {
+      "enabled": true
+    },
+    "copy_relative_path": {
+      "enabled": true
+    }
+  },
+  "context_menu_settings": {
+    "copy_absolute_path": {
+      "enabled": true
+    },
+    "copy_relative_path": {
+      "enabled": true
+    },
+    "copy_class_reference": {
+      "enabled": true
+    }
+  }
+}

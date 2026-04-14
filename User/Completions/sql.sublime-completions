@@ -1,0 +1,175 @@
+{
+  "scope": "source.sql",
+  "completions": [
+    ////////////
+    // SELECT //
+    ////////////
+    {
+      "trigger": "SELECT",
+      "kind": ["keyword", "r", "ReadOnly"],
+      "contents": "SELECT ${1:column1}${2:, ${3:column2, ...}} FROM ${4:table_name}",
+      "details": "Extracts data from a database",
+      "annotation": "SELECT column"
+    },
+    {
+      "trigger": "SELECT ALL",
+      "kind": ["keyword", "r", "ReadOnly"],
+      "contents": "SELECT * FROM ${3:table_name}",
+      "details": "Return all the columns",
+      "annotation": "SELECT *",
+    },
+    {
+      "trigger": "SELECT DISTINCT",
+      "kind": ["keyword", "r", "ReadOnly"],
+      "contents": "SELECT DISTINCT ${1:column1}${2:, ${3:column2}, ...} FROM ${4:table_name}",
+      "details": "Return only distinct (different) values",
+      "annotation": "SELECT DISTINCT column",
+    },
+    {
+      "trigger": "FROM",
+      "kind": "keyword",
+      "contents": "FROM ${1:...tables}",
+      "annotation": "FROM table"
+    },
+    {
+      "trigger": "DISTINCT",
+      "kind": ["keyword", "r", "ReadOnly"],
+      "contents": "DISTINCT ${1:column}"
+    },
+    /////////
+    // DML //
+    /////////
+    {
+      "trigger": "UPDATE",
+      "kind": ["keyword", "w", "WriteOnly"],
+      "contents": "UPDATE ${1:table} SET ${2:field1} = ${3:value1}${4:, ${5:...fields}} ${6:WHERE ${7:...conditions}}",
+      "details": "Updates data in a database"
+    },
+    {
+      "trigger": "INSERT",
+      "kind": ["keyword", "w", "WriteOnly"],
+      "contents": "INSERT INTO ${1:table}${2: (${3:field1${4:, ${5:...fields}}})} VALUES (${6:value1${7:, ...restOfValues}})${8:, (${9:...otherRows})}",
+      "details": "Inserts new data into a database"
+    },
+    {
+      "trigger": "DELETE",
+      "kind": ["keyword", "w", "WriteOnly"],
+      "contents": "DELETE FROM ${1:table}${2: WHERE ${3:...conditions}}",
+      "details": "Deletes data from a database",
+    },
+    /////////////
+    // CLAUSES //
+    /////////////
+    {
+      "trigger": "WHERE",
+      "kind": ["keyword", "c", "Clause"],
+      "contents": "WHERE ${1:condition}",
+      "annotation": "WHERE condition",
+      "details": "Filter records"
+    },
+    {
+      "trigger": "ORDER BY",
+      "kind": ["keyword", "c", "Clause"],
+      "contents": "ORDER BY ${1:column1}${2: ${3:ASC|DESC}}${4:, ${5:column2, ... ASC|DESC}}",
+      "annotation": "ORDER BY column",
+      "details": "Sort the result-set in ascending or descending order"
+    },
+    {
+      "trigger": "DESC",
+      "kind": "keyword",
+      "details": "Sort the records in descending order"
+    },
+    ///////////////
+    // OPERATORS //
+    ///////////////
+    {
+      "trigger": "BETWEEN",
+      "kind": ["keyword", "o", "Operator"],
+      "annotation": "BETWEEN start AND end",
+      "contents": "BETWEEN ${1:startValue} AND ${2:endValue}",
+      "details": "Between a certain range"
+    },
+    {
+      "trigger": "LIKE",
+      "kind": ["keyword", "o", "Operator"],
+      "annotation": "LIKE pattern",
+      "contents": "LIKE `${1:pattern}`",
+      "details": "Search for a pattern"
+    },
+    {
+      "trigger": "IN",
+      "kind": ["keyword", "o", "Operator"],
+      "annotation": "IN values",
+      "contents": "IN (${1:value1}${2:, value2, ...})",
+      "details": "To specify multiple possible values for a column"
+    },
+    ////////////////////
+    // DDL - Database //
+    ////////////////////
+    {
+      "trigger": "CREATE DATABASE",
+      "kind": ["keyword", "w", "WriteOnly"],
+      "contents": "CREATE DATABASE ${1:database}",
+      "details": "Creates a new database"
+    },
+    {
+      "trigger": "ALTER DATABASE",
+      "kind": ["keyword", "w", "WriteOnly"],
+      "contents": "ALTER DATABASE $1",
+      "details": "Modifies a database"
+    },
+    /////////////////
+    // DDL - Table //
+    /////////////////
+    {
+      "trigger": "CREATE TABLE",
+      "kind": ["keyword", "w", "WriteOnly"],
+      "contents": "CREATE TABLE${1: IF NOT EXISTS} ${2:table} (\n\t${3:column1} ${4:DATATYPE${5:(...params)}} ${6:...PROPERTIES}${7:,\n\t${8:...columns}}\n)",
+      "details": "Creates a new table"
+    },
+    {
+      "trigger": "ALTER TABLE",
+      "kind": ["keyword", "w", "WriteOnly"],
+      "contents": "ALTER TABLE ${1:table}",
+      "details": "Modifies a table"
+    },
+    {
+      "trigger": "DROP TABLE",
+      "kind": ["keyword", "w", "WriteOnly"],
+      "contents": "DROP TABLE${1: IF EXISTS} ${2:table}",
+      "details": "Deletes a table"
+    },
+    /////////////////
+    // DDL - Index //
+    /////////////////
+    {
+      "trigger": "CREATE INDEX",
+      "kind": ["keyword", "w", "WriteOnly"],
+      "contents": "CREATE INDEX ${1:name} ON ${2:table} (${3:...columns})",
+      "details": "Creates an index (search key)"
+    },
+    {
+      "trigger": "DROP INDEX",
+      "kind": ["keyword", "w", "WriteOnly"],
+      "contents": "DROP INDEX ${1:name}",
+      "details": "Deletes an index"
+    },
+    ///////////////
+    // FUNCTIONS //
+    ///////////////
+    {
+      "trigger": "COUNT DISTINCT",
+      "kind": "function",
+      "contents": "COUNT(DISTINCT ${1:column})",
+      "annotation": "COUNT(DISTINCT column)",
+      "details": "Return the number of different values"
+    },
+    {
+      "trigger": "COUNT DISTINCT (MS-Access)",
+      "kind": "function",
+      "contents": "Count(*) AS ${1:alias} FROM (SELECT DISTINCT ${2:column} FROM ${3:table_name})",
+      "annotation": "Count(*) FROM (...)",
+      "details": "Return the number of different values"
+    },
+  ]
+}

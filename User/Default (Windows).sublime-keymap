@@ -1,0 +1,305 @@
+[
+  /*===============================
+  =            SUBLIME            =
+  ===============================*/
+  {
+    "keys": [
+      "alt+w"
+    ],
+    "command": "toggle_setting",
+    "args": {
+      "setting": "word_wrap"
+    }
+  },
+  {
+    "keys": [
+      "ctrl+alt+q"
+    ],
+    "command": "cancel_build"
+  },
+  {
+    "keys": [
+      "alt+c"
+    ],
+    "command": "arithmetic"
+  },
+  {
+    "keys": [
+      "alt+b"
+    ],
+    "command": "show_panel",
+    "args": {
+      "panel": "output.exec"
+    },
+    "context": [
+      {
+        "key": "panel_visible",
+        "operand": false
+      }
+    ]
+  },
+  {
+    "keys": [
+      "ctrl+0"
+    ],
+    "command": "reset_font_size"
+  },
+  /*=====  End of SUBLIME  ======*/
+  /*=============================
+  =            EMMET            =
+  =============================*/
+  {
+    "keys": [
+      "shift+ctrl+g"
+    ],
+    "command": "emmet_wrap_with_abbreviation",
+    "context": [
+      {
+        "key": "setting.is_widget",
+        "operand": false
+      }
+    ]
+  },
+  {
+    "keys": [
+      "ctrl+."
+    ],
+    "command": "emmet_enter_abbreviation"
+  },
+  /*=====  End of EMMET  ======*/
+  /*===========================================
+  =            BRACKET HIGHLIGHTER            =
+  ===========================================*/
+  {
+    "keys": [
+      "ctrl+alt+-"
+    ],
+    "command": "bh_key",
+    "args": {
+      "plugin": {
+        "command": "bh_modules.foldbracket"
+      }
+    }
+  },
+  {
+    "keys": [
+      "ctrl+shift+s"
+    ],
+    "command": "bh_async_key",
+    "args": {
+      "lines": true,
+      "plugin": {
+        "type": [
+          "single_quote",
+          "double_quote",
+          "py_single_quote",
+          "py_double_quote"
+        ],
+        "command": "bh_modules.swapquotes"
+      }
+    }
+  },
+  /*=====  End of BRACKET HIGHLIGHTER  ======*/
+  /*===========================================
+  =            SIDEBAR ENHANCEMENT            =
+  ===========================================*/
+  {
+    "keys": [
+      "f12"
+    ],
+    "command": "side_bar_open_in_browser",
+    "args": {
+      "paths": [],
+      "type": "testing",
+      "browser": "firefox"
+    }
+  },
+  // {
+  //  "keys": [
+  //    "ctrl+alt+n"
+  //  ],
+  //  "command": "side_bar_new_file2"
+  // },
+  {
+    "keys": [
+      "f2"
+    ],
+    "command": "side_bar_rename"
+  },
+  {
+    "keys": [
+      "ctrl+alt+d"
+    ],
+    "command": "side_bar_duplicate",
+    "args": {
+      "paths": []
+    }
+  },
+  /*=====  End of SIDEBAR ENHANCEMENT  ======*/
+  /*====================================
+  =            COLOR HELPER            =
+  ====================================*/
+  {
+    "keys": [
+      "ctrl+shift+c"
+    ],
+    "command": "color_helper_picker"
+  },
+  /*=====  End of COLOR HELPER  ======*/
+  /*===========================
+  =            LSP            =
+  ===========================*/
+  {
+    "command": "lsp_format_document",
+    "keys": [
+      "ctrl+shift+h"
+    ],
+    "context": [
+      {
+        "key": "lsp.session_with_capability",
+        "operator": "equal",
+        "operand": "documentFormattingProvider | documentRangeFormattingProvider"
+      }
+    ]
+  },
+  // Run Code Action
+  {
+    "keys": [
+      "ctrl+alt+l"
+    ],
+    "command": "lsp_code_actions",
+    "context": [
+      {
+        "key": "lsp.session_with_capability",
+        "operand": "codeActionProvider"
+      }
+    ]
+  },
+  {
+    "keys": [
+      "ctrl+alt+k"
+    ],
+    "command": "lsp_execute",
+    "args": {
+      "session_name": "LSP-typescript",
+      "command_name": "_typescript.organizeImports",
+      "command_args": [
+        "${file}"
+      ]
+    }
+  },
+  // Rename
+  {
+    "keys": [
+      "alt+f2"
+    ],
+    "command": "lsp_symbol_rename",
+    "context": [
+      {
+        "key": "lsp.session_with_capability",
+        "operand": "renameProvider"
+      }
+    ]
+  },
+  // Goto Definition
+  {
+    "keys": [
+      "f12"
+    ],
+    "command": "lsp_symbol_definition",
+    "args": {
+      "side_by_side": false,
+      "force_group": true,
+      "fallback": false,
+      "group": -1
+    },
+    "context": [
+      {
+        "key": "lsp.session_with_capability",
+        "operand": "definitionProvider"
+      },
+      {
+        "key": "auto_complete_visible",
+        "operand": false
+      }
+    ]
+  },
+  /*=====  End of LSP  ======*/
+  /*================================
+  =            TERMINUS            =
+  ================================*/
+  {
+    "keys": [
+      "alt+t"
+    ],
+    "command": "toggle_terminus_panel"
+  },
+  {
+    "keys": [
+      "ctrl+alt+t"
+    ],
+    "command": "terminus_open",
+    "args": {
+      "cwd": "${file_path:${folder}}"
+    }
+  },
+  /*=====  End of TERMINUS  ======*/
+  /*====================================
+  =            CONSOLE WRAP            =
+  ====================================*/
+  {
+    "keys": [
+      "ctrl+shift+q"
+    ],
+    "command": "console_wrap",
+    "args": {
+      "insert_before": false
+    }
+  },
+  /*=====  End of CONSOLE WRAP  ======*/
+  /*===================================
+  =            REST CLIENT            =
+  ===================================*/
+  {
+    "keys": [
+      "ctrl+shift+r"
+    ],
+    "command": "rest_request"
+  },
+  /*=====  End of REST CLIENT  ======*/
+  /*===================================
+  =            SVG PREVIEW            =
+  ===================================*/
+  {
+    "keys": [
+      "ctrl+alt+v"
+    ],
+    "command": "svg_preview"
+  },
+  /*=====  End of SVG PREVIEW  ======*/
+  /*=============================================
+  =            MARKDOWN LIVE PREVIEW            =
+  =============================================*/
+  {
+    "keys": [
+      "alt+m"
+    ],
+    "command": "open_markdown_preview"
+  },
+  /*=====  End of MARKDOWN LIVE PREVIEW  ======*/
+  /*===============================
+  =            COPILOT            =
+  ===============================*/
+  {
+    "keys": [
+      "alt+."
+    ],
+    "command": "copilot_ask_completions",
+    "context": [
+      {
+        "key": "copilot.is_authorized",
+      }
+    ]
+  },
+  /*=====  End of COPILOT  ======*/
+]
