@@ -1,5 +1,13 @@
 PHPUnitKit
 PlainTasks
 SQLTools
+SublimeLinter-contrib-bootlint
+SublimeLinter-contrib-ecs
+SublimeLinter-contrib-htmlhint
+SublimeLinter-contrib-oxc
+SublimeLinter-contrib-phpstan
+SublimeLinter-contrib-rector
+SublimeLinter-php-cs-fixer
+SublimeLinter-phpmd
 Transparency
 zzz A File Icon
