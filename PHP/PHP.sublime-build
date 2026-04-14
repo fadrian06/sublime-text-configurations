@@ -1,6 +1,0 @@
-{
-	"shell_cmd": "C:/xampp/php/php \"$file_name\"",
-	"selector": "embedding.php",
-	"quiet": true,
-	"interactive": true,
-}
