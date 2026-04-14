@@ -1,9 +1,0 @@
-<snippet>
-	<content><![CDATA[
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=${0:font+name}" />
-]]></content>
-	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
-	<tabTrigger>googlefonts</tabTrigger>
-	<!-- Optional: Set a scope to limit where the snippet will trigger -->
-	<scope>text.html.basic, embedding.php, text.html.blade</scope>
-</snippet>
