@@ -1,0 +1,23 @@
+<snippet>
+	<content><![CDATA[!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width">
+		<meta name="color-scheme" content="light dark">
+		<title>$2</title>
+		<link rel="icon" href="$3" />
+		<link rel="stylesheet" href="$4" />
+	</head>
+	<body>
+		$5
+		<script src="$6"></script>
+	</body>
+</html>]]></content>
+	<tabTrigger>html</tabTrigger>
+	<scope>
+		(text.html entity.name.tag, text.html meta.character.less-than)
+		- (text.html.markdown - markup.raw.code-fence text.html)
+	</scope>
+	<description>html</description>
+</snippet>
