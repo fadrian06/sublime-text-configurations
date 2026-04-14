@@ -97,4 +97,5 @@
   [
   ],
   "ignore_vcs_packages": true,
+  "debug": false,
 }
