@@ -1,0 +1,56 @@
+{
+  "contributions": {
+    "settings": [
+      {
+        "file_patterns": [
+          "LiveServer.sublime-settings"
+        ],
+        "schema": {
+          "properties": {
+            "node_executable_path": {
+              "type": "string",
+              "default": "/usr/bin/node",
+              "markdownDescription": "Path to the Node runtime executable. You can run `whereis node` in your terminal to find this. \n\nIn _Windows Command Prompt_, run `where node`"
+            },
+            "global_node_modules_path": {
+              "type": "string",
+              "default": "/usr/local/lib/node_modules",
+              "markdownDescription": "Path to the default **node_modules** directory. You can run `npm root -g` or `yarn global bin` in your terminal to find this.",
+            },
+            "port": {
+              "type": "integer",
+              "default": 8080,
+              "markdownDescription": "The default port for the server.",
+            },
+            "address": {
+              "type": "string",
+              "default": "localhost",
+              "markdownDescription": "Host address. This should always be either localhost or 127.0.0.1.",
+            },
+            "cors": {
+              "type": "boolean",
+              "default": true,
+              "markdownDescription": "Enables CORS for any origin.",
+            },
+            "browser": {
+              "type": "string",
+              "default": "default",
+              "enum": ["default", "google-chrome", "firefox"],
+              "markdownDescription": "Specifies which browser to use.",
+            },
+            "nobrowser": {
+              "type": "boolean",
+              "default": false,
+              "markdownDescription": "By setting this to true, the browser will not open the server by default",
+            },
+            "wait": {
+              "type": "integer",
+              "default": 100,
+              "markdownDescription": "Wait this amount of milliseconds before reloading the page after a change",
+            }
+          }
+        }
+      }
+    ]
+  }
+}
