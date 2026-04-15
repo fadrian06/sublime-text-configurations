@@ -422,18 +422,65 @@ class AlpineJsCompletions(EventListener):
                 return CompletionList(out, flags=sublime.INHIBIT_WORD_COMPLETIONS)
 
             if attr_base.startswith(('@', 'x-on:')):
+                event_name = re.sub(r'^(?:@|x-on:)', '', attr_base)
                 line_suffix = view.substr(Region(pt, view.line(pt).b))
                 has_assignment = bool(re.match(r'^\s*=', line_suffix))
-                modifiers = [('prevent', 'preventDefault'), ('stop', 'stopPropagation'), ('outside', 'Outside element'),
-                            ('window', 'On window'), ('document', 'On document'), ('once', 'Only once'),
-                            ('debounce', '250ms'), ('throttle', 'Throttle 250ms'), ('self', 'Only self')]
-                out = [CompletionItem(mod, kind=kind_modifier, details=desc) if has_assignment else 
+
+                if re.search(r'(?:@|x-on:)[\w-]+(?:\.(?:window|document))?\.passive\.(\w*)$', last_word):
+                    out = [CompletionItem('false', kind=kind_modifier, details='Make listener cancelable')]
+                    return CompletionList(out, flags=sublime.INHIBIT_WORD_COMPLETIONS)
+
+                if re.search(r'(?:@|x-on:)[\w-]+(?:\.[\w-]+)*\.(?:debounce|throttle)\.(\w*)$', last_word):
+                    timings = [('75ms', '75 milliseconds'), ('150ms', '150 milliseconds'),
+                               ('250ms', '250 milliseconds'), ('500ms', '500 milliseconds'),
+                               ('750ms', '750 milliseconds'), ('1000ms', '1000 milliseconds')]
+                    out = [CompletionItem(value, kind=kind_modifier, details=desc) for value, desc in timings]
+                    return CompletionList(out, flags=sublime.INHIBIT_WORD_COMPLETIONS)
+
+                generic_modifiers = [('prevent', 'preventDefault'), ('stop', 'stopPropagation'),
+                                     ('outside', 'Outside element'), ('window', 'Listen on window'),
+                                     ('document', 'Listen on document'), ('once', 'Only once'),
+                                     ('debounce', 'Debounce handler'), ('throttle', 'Throttle handler'),
+                                     ('self', 'Only self'), ('camel', 'Convert event name to camelCase'),
+                                     ('dot', 'Convert dashes to dots in event name'),
+                                     ('passive', 'Passive event listener'), ('capture', 'Capture phase listener')]
+                keyboard_modifiers = [('shift', 'Shift key'), ('enter', 'Enter key'), ('space', 'Space key'),
+                                      ('ctrl', 'Ctrl key'), ('cmd', 'Cmd key'), ('meta', 'Meta key'),
+                                      ('alt', 'Alt key'), ('up', 'Arrow up'), ('down', 'Arrow down'),
+                                      ('left', 'Arrow left'), ('right', 'Arrow right'),
+                                      ('escape', 'Escape key'), ('tab', 'Tab key'),
+                                      ('caps-lock', 'Caps Lock key'), ('equal', 'Equal key'),
+                                      ('period', 'Period key'), ('comma', 'Comma key'),
+                                      ('slash', 'Slash key'), ('page-down', 'Page Down key'),
+                                      ('page-up', 'Page Up key'), ('home', 'Home key'),
+                                      ('end', 'End key'), ('backspace', 'Backspace key'),
+                                      ('delete', 'Delete key')]
+                mouse_modifiers = [('shift', 'Shift key'), ('ctrl', 'Ctrl key'),
+                                   ('cmd', 'Cmd key'), ('meta', 'Meta key'), ('alt', 'Alt key')]
+
+                modifiers = list(generic_modifiers)
+                if event_name in {'keydown', 'keyup', 'keypress'}:
+                    modifiers = keyboard_modifiers + modifiers
+                elif event_name in {
+                    'click', 'auxclick', 'contextmenu', 'dblclick', 'mouseover', 'mousemove',
+                    'mouseenter', 'mouseleave', 'mouseout', 'mouseup', 'mousedown'
+                }:
+                    modifiers = mouse_modifiers + modifiers
+
+                out = [CompletionItem(mod, kind=kind_modifier, details=desc) if has_assignment else
                        CompletionItem.snippet_completion(mod, mod + '="$1"', kind=kind_modifier, details=desc)
                        for mod, desc in modifiers]
                 return CompletionList(out, flags=sublime.INHIBIT_WORD_COMPLETIONS)
 
         if re.search(r'(?:x-on:|@)[\w-]*$', line_prefix):
-            events = ['click', 'submit', 'input', 'change', 'focus', 'blur', 'keydown', 'keyup']
+            events = [
+                'click', 'submit', 'input', 'change', 'focus', 'blur', 'keydown', 'keyup',
+                'keypress', 'mousedown', 'mouseup', 'mousemove', 'mouseenter', 'mouseleave',
+                'mouseover', 'mouseout', 'contextmenu', 'dblclick', 'auxclick', 'scroll',
+                'resize', 'touchstart', 'touchmove', 'touchend', 'pointerdown', 'pointerup',
+                'pointermove', 'pointerenter', 'pointerleave', 'transitionend', 'animationend',
+                'load', 'unload'
+            ]
             line_suffix = view.substr(Region(pt, view.line(pt).b))
             has_assignment = bool(re.match(r'^\s*=', line_suffix))
             out = [CompletionItem(event, kind=kind_event) if has_assignment else 
