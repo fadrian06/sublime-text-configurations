@@ -17,8 +17,9 @@ class AlpineJsCompletions(EventListener):
         # 1. Verificar contexto: ¿Estamos dentro de un valor de atributo Alpine?
         # Obtenemos el texto de la línea hasta el cursor
         line_prefix = view.substr(Region(view.line(pt).a, pt))
-        # Buscamos si el cursor está precedido por un atributo x-* seguido de comillas abiertas
-        attr_match = re.search(r'(x-(?:show|text|html|model|modelable|ref|bind|on|data))=["\'][^"\']*$', line_prefix)
+        # Buscamos si el cursor está precedido por un atributo Alpine (incluyendo shorthands como @ y :) seguido de comillas abiertas
+        # Soporta: x-on:click, @click, x-bind:class, :class, x-text, etc.
+        attr_match = re.search(r'(?:x-(?:show|text|html|model|modelable|ref|bind|on|data|effect|init)|[@:])[\w\.:-]*=["\'][^"\']*$', line_prefix)
         
         kind_directive = [KindId.NAMESPACE, 'd', 'Alpine.js Directive']
         kind_property = [KindId.VARIABLE, 'p', 'Alpine.js Property']
