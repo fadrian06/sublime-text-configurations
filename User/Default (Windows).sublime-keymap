@@ -1,7 +1,7 @@
 [
   {
     "keys": [
-      "ctrl+."
+      "alt+."
     ],
     "command": "copilot_ask_completions",
     "context": [
