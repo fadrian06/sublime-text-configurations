@@ -373,6 +373,26 @@ class AlpineJsCompletions(EventListener):
 
         return string_quote is not None
 
+    def get_active_arrow_function_vars(self, view: View, pt: Point) -> Set[str]:
+        attr_name, is_inside, content_before_cursor = self.get_current_alpine_attribute_context(view, pt)
+        if not is_inside or not attr_name:
+            return set()
+
+        vars = set()
+        pattern = re.compile(r'(?:\(([^)]*)\)|([A-Za-z_$][\w$]*))\s*=>')
+
+        for match in pattern.finditer(content_before_cursor):
+            tuple_params, single_param = match.groups()
+            if single_param:
+                vars.add(single_param)
+            elif tuple_params:
+                for param in tuple_params.split(','):
+                    param_name = param.strip()
+                    if param_name:
+                        vars.add(param_name)
+
+        return vars
+
     def get_active_iteration_vars(self, view: View, pt: Point) -> Set[str]:
         """
         Encuentra las variables de x-for activas en la posición actual.
@@ -471,6 +491,7 @@ class AlpineJsCompletions(EventListener):
 
                 # Caso B: Variables normales
                 iteration_vars = self.get_active_iteration_vars(view, pt)
+                callback_vars = self.get_active_arrow_function_vars(view, pt)
                 registered_data = self.get_registered_data_names(view) if attr_name == 'x-data' else set()
                 completions = []
                 
@@ -478,8 +499,12 @@ class AlpineJsCompletions(EventListener):
                     if var not in ignored_keys:
                         completions.append(CompletionItem(var, kind=kind_variable, details='Iteration Variable'))
 
+                for var in sorted(list(callback_vars)):
+                    if var not in ignored_keys and var not in iteration_vars:
+                        completions.append(CompletionItem(var, kind=kind_variable, details='Callback Variable'))
+
                 for member_name in sorted(list(members)):
-                    if member_name not in ignored_keys and member_name not in iteration_vars:
+                    if member_name not in ignored_keys and member_name not in iteration_vars and member_name not in callback_vars:
                         member_kind = kind_method if members[member_name] == 'method' else kind_property
                         member_detail = 'Defined method in x-data' if members[member_name] == 'method' else 'Defined in x-data'
                         completions.append(CompletionItem(member_name, kind=member_kind, details=member_detail))
@@ -488,9 +513,18 @@ class AlpineJsCompletions(EventListener):
                     if data_name not in ignored_keys:
                         completions.append(CompletionItem(data_name, kind=kind_data, details='Reusable Alpine.data'))
                 
-                magics = ['$event', '$dispatch', '$nextTick', '$refs', '$el', '$watch', '$root', '$data', '$id', '$store']
+                magics = ['$event', '$dispatch', '$nextTick', '$refs', '$el', '$root', '$data', '$id', '$store']
                 for magic in magics:
                     completions.append(CompletionItem(magic, kind=[KindId.SNIPPET, 'v', 'Magic Variable']))
+
+                completions.append(
+                    CompletionItem.snippet_completion(
+                        '$watch',
+                        r"\$watch('${1:property}', ${2:value} => ${3})",
+                        kind=[KindId.SNIPPET, 'v', 'Magic Variable'],
+                        details='Watch Alpine property changes'
+                    )
+                )
 
                 out = [c for c in completions if c.trigger.lower().startswith(prefix.lower())]
                 return CompletionList(out, flags=sublime.INHIBIT_WORD_COMPLETIONS)
