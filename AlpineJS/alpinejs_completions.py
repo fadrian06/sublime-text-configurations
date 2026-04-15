@@ -7,6 +7,10 @@ from sublime_types import Point, KindId
 
 
 class AlpineJsCompletions(EventListener):
+    def get_dispatched_custom_event_names(self, view: View) -> Set[str]:
+        content = view.substr(Region(0, view.size()))
+        return set(re.findall(r'\$dispatch\(\s*["\']([\w:-]+)["\']', content))
+
     def get_current_open_tag(self, view: View, pt: Point) -> Optional[Tuple[int, int, str, str, bool]]:
         content = view.substr(Region(0, view.size()))
         current_tag: Optional[Tuple[int, int, str, str, bool]] = None
@@ -527,7 +531,8 @@ class AlpineJsCompletions(EventListener):
                 return CompletionList(out, flags=sublime.INHIBIT_WORD_COMPLETIONS)
 
         if re.search(r'(?:x-on:|@)[\w-]*$', line_prefix):
-            custom_events = self.get_descendant_custom_event_names(view, pt)
+            descendant_custom_events = self.get_descendant_custom_event_names(view, pt)
+            global_custom_events = self.get_dispatched_custom_event_names(view)
             events = [
                 'click', 'submit', 'input', 'change', 'focus', 'blur', 'keydown', 'keyup',
                 'keypress', 'mousedown', 'mouseup', 'mousemove', 'mouseenter', 'mouseleave',
@@ -540,11 +545,17 @@ class AlpineJsCompletions(EventListener):
             has_assignment = bool(re.match(r'^\s*=', line_suffix))
             out = [CompletionItem(event, kind=kind_custom_event, details='Custom event dispatched in children') if has_assignment else
                    CompletionItem.snippet_completion(event, event + '="$1"', kind=kind_custom_event, details='Custom event dispatched in children')
-                   for event in sorted(custom_events)]
+                   for event in sorted(descendant_custom_events)]
+            out.extend([
+                CompletionItem(f'{event}.window', kind=kind_custom_event, details='Custom event dispatched outside current element')
+                if has_assignment else
+                CompletionItem.snippet_completion(f'{event}.window', f'{event}.window="$1"', kind=kind_custom_event, details='Custom event dispatched outside current element')
+                for event in sorted(global_custom_events - descendant_custom_events)
+            ])
             out.extend([
                 CompletionItem(event, kind=kind_event) if has_assignment else
                 CompletionItem.snippet_completion(event, event + '="$1"', kind=kind_event)
-                for event in sorted(events) if event not in custom_events
+                for event in sorted(events) if event not in global_custom_events
             ])
             return CompletionList(out, flags=sublime.INHIBIT_WORD_COMPLETIONS)
 
