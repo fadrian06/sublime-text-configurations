@@ -34,7 +34,6 @@ class AlpineJsCompletions(EventListener):
             return CompletionList(out)
 
         # 2. CONTEXTO: Dentro de un VALOR de atributo (x-text="...", @click="...")
-        # Detectamos si estamos dentro de un atributo Alpine (incluyendo shorthands)
         attr_match = re.search(r'([\w\.:@-]+)\s*=\s*["\']([^"\']*)$', wide_context, re.DOTALL)
         
         if attr_match:
@@ -47,21 +46,15 @@ class AlpineJsCompletions(EventListener):
             
             if is_alpine:
                 content = view.substr(Region(0, view.size()))
-                # Encontrar todos los bloques x-data="..." o x-data='...'
                 x_data_blocks = re.findall(r'x-data\s*=\s*(?P<q>["\'])(.*?)(?P=q)', content, re.DOTALL)
                 
                 properties = set()
                 for _, block_content in x_data_blocks:
-                    # Extraer llaves de diversas formas:
-                    # 1. key: value
                     properties.update(re.findall(r'(\w+)\s*:', block_content))
-                    # 2. get key(), set key(), key() { ... }
                     properties.update(re.findall(r'(?:get|set)?\s*(\w+)\s*\(\)', block_content))
-                    # 3. Métodos con parámetros: key(param) { ... }
                     properties.update(re.findall(r'(\w+)\s*\([^)]*\)\s*\{', block_content))
 
                 out = []
-                # Filtrar propiedades del sistema (como get, set) y duplicados
                 ignored_keys = {'get', 'set', 'return', 'if', 'else', 'this'}
                 for prop in sorted(list(properties)):
                     if prop not in ignored_keys:
@@ -79,7 +72,6 @@ class AlpineJsCompletions(EventListener):
         line_suffix = view.substr(Region(pt, view.line(pt).b))
         has_assignment = bool(re.match(r'^\s*=', line_suffix))
 
-        # Modificadores
         last_word = line_prefix.split()[-1] if line_prefix.strip() else ""
         if '.' in last_word:
             attr_parts = last_word.split('.')
@@ -103,7 +95,6 @@ class AlpineJsCompletions(EventListener):
                         out.append(CompletionItem.snippet_completion(mod, mod + '="$1"', kind=kind_modifier, details=desc))
                 return CompletionList(out, flags=sublime.INHIBIT_WORD_COMPLETIONS)
 
-        # Eventos
         if re.search(r'(?:x-on:|@)[\w-]*$', line_prefix):
             events = [
                 'afterprint', 'beforeprint', 'beforeunload', 'error', 'hashchange', 'load', 'message',
@@ -127,24 +118,37 @@ class AlpineJsCompletions(EventListener):
         # 4. CONTEXTO: Directivas base x-* 
         if view.match_selector(pt, 'text.html meta.tag - string - meta.attribute-with-value'):
             if not re.search(r'=\s*["\'][^"\']*$', wide_context, re.DOTALL):
-                available_completions = [
-                    CompletionItem.snippet_completion('x-data', 'x-data="{ $1 }"', kind=kind_directive),
-                    CompletionItem.snippet_completion('x-init', 'x-init="$1"'),
-                    CompletionItem.snippet_completion('x-show', 'x-show="$1"'),
-                    CompletionItem.snippet_completion('x-bind', 'x-bind:$1="$2"'),
-                    CompletionItem.snippet_completion('x-on', 'x-on:$1="$2"'),
-                    CompletionItem.snippet_completion('x-text', 'x-text="$1"'),
-                    CompletionItem.snippet_completion('x-html', 'x-html="$1"'),
-                    CompletionItem.snippet_completion('x-model', 'x-model="$1"'),
-                    CompletionItem.snippet_completion('x-modalable', 'x-modalable="$1"'),
-                    CompletionItem.snippet_completion('x-for', 'x-for="$1"'),
-                    CompletionItem('x-transition', kind=kind_directive),
-                    CompletionItem.snippet_completion('x-ref', 'x-ref="$1"'),
-                    CompletionItem('x-cloak', kind=kind_directive),
-                    CompletionItem.snippet_completion('x-teleport', 'x-teleport="$1"'),
-                    CompletionItem.snippet_completion('x-if', 'x-if="$1"'),
-                    CompletionItem.snippet_completion('x-id', 'x-id="$1"'),
-                ]
-                return CompletionList(available_completions)
+                # Detectar el nombre de la etiqueta actual
+                tag_name_match = re.search(r'<(\w+)[^>]*$', wide_context)
+                is_template = tag_name_match and tag_name_match.group(1).lower() == 'template'
+
+                out = []
+                if is_template:
+                    # En template solo sugerimos las específicas
+                    out = [
+                        CompletionItem.snippet_completion('x-for', 'x-for="$1"', kind=kind_directive),
+                        CompletionItem.snippet_completion('x-if', 'x-if="$1"', kind=kind_directive),
+                        CompletionItem.snippet_completion('x-teleport', 'x-teleport="$1"', kind=kind_directive),
+                    ]
+                else:
+                    # En etiquetas normales sugerimos el resto (EXCEPTO x-for)
+                    out = [
+                        CompletionItem.snippet_completion('x-data', 'x-data="{ $1 }"', kind=kind_directive),
+                        CompletionItem.snippet_completion('x-init', 'x-init="$1"', kind=kind_directive),
+                        CompletionItem.snippet_completion('x-show', 'x-show="$1"', kind=kind_directive),
+                        CompletionItem.snippet_completion('x-bind', 'x-bind:$1="$2"', kind=kind_directive),
+                        CompletionItem.snippet_completion('x-on', 'x-on:$1="$2"', kind=kind_directive),
+                        CompletionItem.snippet_completion('x-text', 'x-text="$1"', kind=kind_directive),
+                        CompletionItem.snippet_completion('x-html', 'x-html="$1"', kind=kind_directive),
+                        CompletionItem.snippet_completion('x-model', 'x-model="$1"', kind=kind_directive),
+                        CompletionItem.snippet_completion('x-modalable', 'x-modalable="$1"', kind=kind_directive),
+                        CompletionItem('x-transition', kind=kind_directive),
+                        CompletionItem.snippet_completion('x-ref', 'x-ref="$1"', kind=kind_directive),
+                        CompletionItem('x-cloak', kind=kind_directive),
+                        CompletionItem.snippet_completion('x-if', 'x-if="$1"', kind=kind_directive),
+                        CompletionItem.snippet_completion('x-id', 'x-id="$1"', kind=kind_directive),
+                    ]
+
+                return CompletionList(out)
 
         return CompletionList([])
