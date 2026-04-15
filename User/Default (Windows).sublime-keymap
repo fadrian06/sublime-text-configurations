@@ -325,7 +325,7 @@
   { "keys": ["ctrl+f3"], "command": "find_under" },
   { "keys": ["ctrl+shift+f3"], "command": "find_under_prev" },
   { "keys": ["alt+f3"], "command": "find_all_under" },
-  { "keys": ["ctrl+e"], "command": "slurp_find_string" },
+  // { "keys": ["ctrl+e"], "command": "slurp_find_string" },
   { "keys": ["ctrl+shift+e"], "command": "slurp_replace_string" },
   { "keys": ["ctrl+shift+f"], "command": "show_panel", "args": {"panel": "find_in_files"} },
   { "keys": ["f4"], "command": "next_result" },
