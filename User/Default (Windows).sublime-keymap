@@ -1,0 +1,26 @@
+[
+  {
+    "keys": [
+      "ctrl+."
+    ],
+    "command": "copilot_ask_completions",
+    "context": [
+      {
+        "key": "copilot.is_authorized",
+      }
+    ]
+  },
+  // Format File
+  {
+    "keys": [
+      "ctrl+shift+h"
+    ],
+    "command": "lsp_format_document",
+    "context": [
+      {
+        "key": "lsp.session_with_capability",
+        "operand": "documentFormattingProvider | documentRangeFormattingProvider"
+      }
+    ]
+  },
+]
