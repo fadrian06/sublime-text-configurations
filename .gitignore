@@ -12,3 +12,4 @@ SublimeLinter-phpmd
 Transparency
 zzz A File Icon
 __pycache__
+*.hidden-color-scheme
