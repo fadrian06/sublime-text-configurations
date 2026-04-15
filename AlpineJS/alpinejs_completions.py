@@ -126,7 +126,18 @@ class AlpineJsCompletions(EventListener):
                 if is_template:
                     # En template solo sugerimos las específicas
                     out = [
-                        CompletionItem.snippet_completion('x-for', 'x-for="$1"', kind=kind_directive),
+                        CompletionItem.snippet_completion(
+                            'x-for', 
+                            'x-for="${1:item} in ${2:items}" :key="${3:$1}"', 
+                            kind=kind_directive,
+                            details='Iterate over an array'
+                        ),
+                        CompletionItem.snippet_completion(
+                            'x-for (with index)', 
+                            'x-for="(${1:item}, ${2:index}) in ${3:items}" :key="${4:$2}"', 
+                            kind=kind_directive,
+                            details='Iterate with index'
+                        ),
                         CompletionItem.snippet_completion('x-if', 'x-if="$1"', kind=kind_directive),
                         CompletionItem.snippet_completion('x-teleport', 'x-teleport="$1"', kind=kind_directive),
                     ]
