@@ -7,6 +7,48 @@ from sublime_types import Point, KindId
 
 
 class AlpineJsCompletions(EventListener):
+    def is_inside_top_level_alpine_data_object(self, view: View, pt: Point) -> bool:
+        content = view.substr(Region(0, view.size()))
+        pattern = re.compile(r'Alpine\.data\(\s*(["\'])([\w-]+)\1\s*,', re.DOTALL)
+
+        for match in pattern.finditer(content):
+            search_start = match.end()
+            object_start = content.find('({', search_start)
+            if object_start == -1:
+                continue
+
+            opening_brace_index = object_start + 1
+            closing_brace_index = self.find_matching_brace(content, opening_brace_index)
+            if closing_brace_index == -1 or not (opening_brace_index < pt < closing_brace_index):
+                continue
+
+            depth = 1
+            string_quote: Optional[str] = None
+            escaped = False
+
+            for char in content[opening_brace_index + 1:pt]:
+                if escaped:
+                    escaped = False
+                    continue
+
+                if string_quote:
+                    if char == '\\':
+                        escaped = True
+                    elif char == string_quote:
+                        string_quote = None
+                    continue
+
+                if char in ('"', "'", '`'):
+                    string_quote = char
+                elif char == '{':
+                    depth += 1
+                elif char == '}':
+                    depth -= 1
+
+            return string_quote is None and depth == 1
+
+        return False
+
     def get_dispatched_custom_event_names(self, view: View) -> Set[str]:
         content = view.substr(Region(0, view.size()))
         return set(re.findall(r'\$dispatch\(\s*["\']([\w:-]+)["\']', content))
@@ -377,6 +419,14 @@ class AlpineJsCompletions(EventListener):
                 kind=[KindId.MARKUP, 'c', 'CDN'],
                 annotation='Alpine.js v3.15.11'
             )])
+
+        # 1.5 CONTEXTO: Dentro del objeto raiz de Alpine.data(...)
+        if self.is_inside_top_level_alpine_data_object(view, pt):
+            lifecycle_methods = [
+                CompletionItem.snippet_completion('init', 'init() {\n\t$1\n}', kind=kind_method, details='Alpine.data lifecycle method')
+            ]
+            out = [c for c in lifecycle_methods if c.trigger.lower().startswith(prefix.lower())]
+            return CompletionList(out, flags=sublime.INHIBIT_WORD_COMPLETIONS)
 
         # 2. CONTEXTO: Dentro de un VALOR de atributo
         attr_name, is_inside = self.get_current_alpine_attribute(view, pt)
