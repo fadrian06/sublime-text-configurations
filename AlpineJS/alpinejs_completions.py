@@ -300,6 +300,34 @@ class AlpineJsCompletions(EventListener):
         last_word = line_prefix.split()[-1] if line_prefix.strip() else ""
         if '.' in last_word:
             attr_base = last_word.split('.')[0]
+            if attr_base.startswith('x-transition'):
+                transition_values = []
+
+                if re.search(r'x-transition(?::(?:enter|leave))?\.duration\.(\w*)$', last_word):
+                    transition_values = [('75ms', '75 milliseconds'), ('150ms', '150 milliseconds'),
+                                         ('300ms', '300 milliseconds'), ('500ms', '500 milliseconds')]
+                elif re.search(r'x-transition(?::(?:enter|leave))?\.delay\.(\w*)$', last_word):
+                    transition_values = [('50ms', '50 milliseconds'), ('75ms', '75 milliseconds'),
+                                         ('150ms', '150 milliseconds'), ('300ms', '300 milliseconds')]
+                elif re.search(r'x-transition(?::(?:enter|leave))?\.scale\.(\w*)$', last_word):
+                    transition_values = [('75', 'Scale to 75%'), ('80', 'Scale to 80%'),
+                                         ('90', 'Scale to 90%'), ('95', 'Scale to 95%')]
+                elif re.search(r'x-transition(?::(?:enter|leave))?\.origin(?:\.[\w-]+)?\.(\w*)$', last_word):
+                    transition_values = [('top', 'Top origin'), ('right', 'Right origin'),
+                                         ('bottom', 'Bottom origin'), ('left', 'Left origin')]
+
+                if transition_values:
+                    out = [CompletionItem(value, kind=kind_modifier, details=desc) for value, desc in transition_values]
+                    return CompletionList(out, flags=sublime.INHIBIT_WORD_COMPLETIONS)
+
+                transition_modifiers = [('duration', 'Set transition duration'), ('delay', 'Set transition delay'),
+                                        ('opacity', 'Opacity only transition'), ('scale', 'Scale only transition'),
+                                        ('origin', 'Set scale origin'), ('top', 'Top origin'),
+                                        ('right', 'Right origin'), ('bottom', 'Bottom origin'),
+                                        ('left', 'Left origin')]
+                out = [CompletionItem(mod, kind=kind_modifier, details=desc) for mod, desc in transition_modifiers]
+                return CompletionList(out, flags=sublime.INHIBIT_WORD_COMPLETIONS)
+
             if attr_base.startswith(('@', 'x-on:')):
                 line_suffix = view.substr(Region(pt, view.line(pt).b))
                 has_assignment = bool(re.match(r'^\s*=', line_suffix))
@@ -318,6 +346,20 @@ class AlpineJsCompletions(EventListener):
             out = [CompletionItem(event, kind=kind_event) if has_assignment else 
                    CompletionItem.snippet_completion(event, event + '="$1"', kind=kind_event)
                    for event in sorted(events)]
+            return CompletionList(out, flags=sublime.INHIBIT_WORD_COMPLETIONS)
+
+        if re.search(r'x-transition:[\w-]*$', line_prefix):
+            line_suffix = view.substr(Region(pt, view.line(pt).b))
+            has_assignment = bool(re.match(r'^\s*=', line_suffix))
+            phases = [('enter', 'Applied during the entering phase'),
+                      ('enter-start', 'Before element is inserted'),
+                      ('enter-end', 'After element is inserted'),
+                      ('leave', 'Applied during the leaving phase'),
+                      ('leave-start', 'When a leave transition starts'),
+                      ('leave-end', 'After a leave transition starts')]
+            out = [CompletionItem(phase, kind=kind_directive, details=desc) if has_assignment else
+                   CompletionItem.snippet_completion(phase, phase + '="$1"', kind=kind_directive, details=desc)
+                   for phase, desc in phases]
             return CompletionList(out, flags=sublime.INHIBIT_WORD_COMPLETIONS)
 
         # 4. CONTEXTO: Directivas base x-* 
@@ -340,12 +382,18 @@ class AlpineJsCompletions(EventListener):
                        CompletionItem.snippet_completion('x-html', 'x-html="$1"', kind=kind_directive),
                        CompletionItem.snippet_completion('x-model', 'x-model="$1"', kind=kind_directive),
                        CompletionItem.snippet_completion('x-modelable', 'x-modelable="$1"', kind=kind_directive),
-                       CompletionItem('x-transition', kind=kind_directive),
+                       CompletionItem.snippet_completion('x-transition', 'x-transition', kind=kind_directive, details='Transition helper'),
+                       CompletionItem.snippet_completion('x-transition:enter', 'x-transition:enter="$1"', kind=kind_directive, details='Enter transition classes'),
+                       CompletionItem.snippet_completion('x-transition:enter-start', 'x-transition:enter-start="$1"', kind=kind_directive, details='Enter start classes'),
+                       CompletionItem.snippet_completion('x-transition:enter-end', 'x-transition:enter-end="$1"', kind=kind_directive, details='Enter end classes'),
+                       CompletionItem.snippet_completion('x-transition:leave', 'x-transition:leave="$1"', kind=kind_directive, details='Leave transition classes'),
+                       CompletionItem.snippet_completion('x-transition:leave-start', 'x-transition:leave-start="$1"', kind=kind_directive, details='Leave start classes'),
+                       CompletionItem.snippet_completion('x-transition:leave-end', 'x-transition:leave-end="$1"', kind=kind_directive, details='Leave end classes'),
                        CompletionItem.snippet_completion('x-effect', 'x-effect="$1"', kind=kind_directive),
                        CompletionItem('x-ignore', kind=kind_directive),
                        CompletionItem.snippet_completion('x-ref', 'x-ref="$1"', kind=kind_directive),
                        CompletionItem('x-cloak', kind=kind_directive),
                        CompletionItem.snippet_completion('x-id', 'x-id="$1"', kind=kind_directive)]
-            return CompletionList(out)
+            return CompletionList(out, flags=sublime.INHIBIT_WORD_COMPLETIONS)
             
         return CompletionList([])
