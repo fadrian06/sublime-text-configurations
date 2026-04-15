@@ -21,6 +21,7 @@ class AlpineJsCompletions(EventListener):
         
         kind_directive = [KindId.NAMESPACE, 'd', 'Alpine.js Directive']
         kind_property = [KindId.VARIABLE, 'p', 'Alpine.js Property']
+        kind_variable = [KindId.VARIABLE, 'v', 'Alpine.js Variable']
         kind_modifier = [KindId.KEYWORD, 'm', 'Modifier']
         kind_event = [KindId.FUNCTION, 'e', 'Event']
 
@@ -46,20 +47,39 @@ class AlpineJsCompletions(EventListener):
             
             if is_alpine:
                 content = view.substr(Region(0, view.size()))
-                x_data_blocks = re.findall(r'x-data\s*=\s*(?P<q>["\'])(.*?)(?P=q)', content, re.DOTALL)
-                
                 properties = set()
+                iteration_vars = set()
+
+                # A. Extraer de x-data (Propiedades)
+                x_data_blocks = re.findall(r'x-data\s*=\s*(?P<q>["\'])(.*?)(?P=q)', content, re.DOTALL)
                 for _, block_content in x_data_blocks:
                     properties.update(re.findall(r'(\w+)\s*:', block_content))
                     properties.update(re.findall(r'(?:get|set)?\s*(\w+)\s*\(\)', block_content))
                     properties.update(re.findall(r'(\w+)\s*\([^)]*\)\s*\{', block_content))
 
+                # B. Extraer de x-for (Variables de iteración)
+                x_for_matches = re.findall(r'x-for\s*=\s*["\']\s*(?:\(([^)]+)\)|(\w+))\s+in', content)
+                for tuple_match, single_match in x_for_matches:
+                    if single_match:
+                        iteration_vars.add(single_match)
+                    if tuple_match:
+                        for var in tuple_match.split(','):
+                            iteration_vars.add(var.strip())
+
                 out = []
                 ignored_keys = {'get', 'set', 'return', 'if', 'else', 'this'}
+                
+                # Añadir variables de iteración (con icono 'v')
+                for var in sorted(list(iteration_vars)):
+                    if var not in ignored_keys:
+                        out.append(CompletionItem(var, kind=kind_variable, details='Iteration Variable'))
+
+                # Añadir propiedades de x-data (con icono 'p')
                 for prop in sorted(list(properties)):
-                    if prop not in ignored_keys:
+                    if prop not in ignored_keys and prop not in iteration_vars:
                         out.append(CompletionItem(prop, kind=kind_property, details='Defined in x-data'))
                 
+                # Añadir variables mágicas
                 magics = ['$event', '$dispatch', '$nextTick', '$refs', '$el', '$watch', '$root', '$data', '$id']
                 for magic in magics:
                     out.append(CompletionItem(magic, kind=[KindId.SNIPPET, 'v', 'Magic Variable']))
@@ -118,13 +138,11 @@ class AlpineJsCompletions(EventListener):
         # 4. CONTEXTO: Directivas base x-* 
         if view.match_selector(pt, 'text.html meta.tag - string - meta.attribute-with-value'):
             if not re.search(r'=\s*["\'][^"\']*$', wide_context, re.DOTALL):
-                # Detectar el nombre de la etiqueta actual
                 tag_name_match = re.search(r'<(\w+)[^>]*$', wide_context)
                 is_template = tag_name_match and tag_name_match.group(1).lower() == 'template'
 
                 out = []
                 if is_template:
-                    # En template solo sugerimos las específicas
                     out = [
                         CompletionItem.snippet_completion(
                             'x-for', 
@@ -142,22 +160,21 @@ class AlpineJsCompletions(EventListener):
                         CompletionItem.snippet_completion('x-teleport', 'x-teleport="$1"', kind=kind_directive),
                     ]
                 else:
-                    # En etiquetas normales sugerimos el resto (EXCEPTO x-for)
                     out = [
                         CompletionItem.snippet_completion('x-data', 'x-data="{ $1 }"', kind=kind_directive),
-                        CompletionItem.snippet_completion('x-init', 'x-init="$1"', kind=kind_directive),
-                        CompletionItem.snippet_completion('x-show', 'x-show="$1"', kind=kind_directive),
-                        CompletionItem.snippet_completion('x-bind', 'x-bind:$1="$2"', kind=kind_directive),
-                        CompletionItem.snippet_completion('x-on', 'x-on:$1="$2"', kind=kind_directive),
-                        CompletionItem.snippet_completion('x-text', 'x-text="$1"', kind=kind_directive),
-                        CompletionItem.snippet_completion('x-html', 'x-html="$1"', kind=kind_directive),
-                        CompletionItem.snippet_completion('x-model', 'x-model="$1"', kind=kind_directive),
-                        CompletionItem.snippet_completion('x-modalable', 'x-modalable="$1"', kind=kind_directive),
+                        CompletionItem.snippet_completion('x-init', 'x-init="$1"'),
+                        CompletionItem.snippet_completion('x-show', 'x-show="$1"'),
+                        CompletionItem.snippet_completion('x-bind', 'x-bind:$1="$2"'),
+                        CompletionItem.snippet_completion('x-on', 'x-on:$1="$2"'),
+                        CompletionItem.snippet_completion('x-text', 'x-text="$1"'),
+                        CompletionItem.snippet_completion('x-html', 'x-html="$1"'),
+                        CompletionItem.snippet_completion('x-model', 'x-model="$1"'),
+                        CompletionItem.snippet_completion('x-modalable', 'x-modalable="$1"'),
                         CompletionItem('x-transition', kind=kind_directive),
-                        CompletionItem.snippet_completion('x-ref', 'x-ref="$1"', kind=kind_directive),
+                        CompletionItem.snippet_completion('x-ref', 'x-ref="$1"'),
                         CompletionItem('x-cloak', kind=kind_directive),
-                        CompletionItem.snippet_completion('x-if', 'x-if="$1"', kind=kind_directive),
-                        CompletionItem.snippet_completion('x-id', 'x-id="$1"', kind=kind_directive),
+                        CompletionItem.snippet_completion('x-if', 'x-if="$1"'),
+                        CompletionItem.snippet_completion('x-id', 'x-id="$1"'),
                     ]
 
                 return CompletionList(out)
