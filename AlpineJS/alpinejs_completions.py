@@ -7,6 +7,57 @@ from sublime_types import Point, KindId
 
 
 class AlpineJsCompletions(EventListener):
+    def extract_x_data_properties(self, block_content: str) -> Set[str]:
+        properties = set()
+        properties.update(re.findall(r'(\w+)\s*:', block_content))
+        properties.update(re.findall(r'(?:get|set)?\s*(\w+)\s*\(\)', block_content))
+        properties.update(re.findall(r'(\w+)\s*\([^)]*\)\s*\{', block_content))
+        return properties
+
+    def get_active_x_data_properties(self, view: View, pt: Point) -> Set[str]:
+        """
+        Encuentra las propiedades x-data visibles en la posición actual.
+        Respeta el scope HTML: incluye el x-data actual y sus ancestros abiertos,
+        pero no los x-data de nodos hijos o hermanos.
+        """
+        content = view.substr(Region(0, view.size()))
+        tag_pattern = re.compile(r'<(/?)([\w:-]+)([^<>]*?)(/?)>', re.DOTALL)
+        x_data_pattern = re.compile(r'x-data\s*=\s*(?P<q>["\'])(.*?)(?P=q)', re.DOTALL)
+        stack: List[Tuple[str, Set[str]]] = []
+
+        for match in tag_pattern.finditer(content):
+            tag_start, tag_end = match.span()
+            if tag_start > pt:
+                break
+
+            is_closing, tag_name, attrs, self_closing = match.groups()
+            tag_name = tag_name.lower()
+
+            if is_closing:
+                for index in range(len(stack) - 1, -1, -1):
+                    if stack[index][0] == tag_name:
+                        del stack[index:]
+                        break
+            else:
+                properties = set()
+                x_data_match = x_data_pattern.search(attrs)
+                if x_data_match:
+                    properties = self.extract_x_data_properties(x_data_match.group(2))
+
+                stack.append((tag_name, properties))
+
+                if self_closing or attrs.strip().endswith('/'):
+                    stack.pop()
+
+            if tag_start <= pt < tag_end:
+                break
+
+        active_properties = set()
+        for _, properties in stack:
+            active_properties.update(properties)
+
+        return active_properties
+
     def get_current_alpine_attribute(self, view: View, pt: Point) -> Tuple[Optional[str], bool]:
         """
         Encuentra el nombre del atributo Alpine en el que se encuentra el cursor.
@@ -84,13 +135,7 @@ class AlpineJsCompletions(EventListener):
         
         if is_inside:
             if attr_name:
-                content = view.substr(Region(0, view.size()))
-                properties = set()
-                x_data_blocks = re.findall(r'x-data\s*=\s*(?P<q>["\'])(.*?)(?P=q)', content, re.DOTALL)
-                for _, block_content in x_data_blocks:
-                    properties.update(re.findall(r'(\w+)\s*:', block_content))
-                    properties.update(re.findall(r'(?:get|set)?\s*(\w+)\s*\(\)', block_content))
-                    properties.update(re.findall(r'(\w+)\s*\([^)]*\)\s*\{', block_content))
+                properties = self.get_active_x_data_properties(view, pt)
 
                 ignored_keys = {'get', 'set', 'return', 'if', 'else', 'this'}
                 out = []
