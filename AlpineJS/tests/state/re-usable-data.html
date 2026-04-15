@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <meta name="color-scheme" content="light dark">
+  <title></title>
+  <link rel="icon" href="" />
+  <link rel="stylesheet" href="" />
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.15.11/dist/cdn.min.js"></script>
+  <script>
+    Alpine.data('dropdown', () => ({
+      open: false,
+
+      toggle() {
+        this.open = !this.open;
+      }
+    }))
+  </script>
+</head>
+
+<body>
+  <div x-data="dropdown">
+    <button @click="toggle">Expand</button>
+
+    <span x-show="open">Content...</span>
+  </div>
+
+  <div x-data="dropdown">
+    <button @click="toggle">Expand</button>
+
+    <span x-show="open">Content...</span>
+  </div>
+</body>
+
+</html>
