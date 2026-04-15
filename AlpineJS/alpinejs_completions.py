@@ -20,7 +20,16 @@ class AlpineJsCompletions(EventListener):
         kind_modifier = [KindId.KEYWORD, 'm', 'Modifier']
         kind_event = [KindId.FUNCTION, 'e', 'Event']
 
-        # 1. CONTEXTO: Dentro de un VALOR de atributo (x-text="...", @click="...")
+        # 1. CONTEXTO: CDN de Alpine.js en script src
+        if re.search(r'<script\s+[^>]*src=["\'][^"\']*$', line_prefix):
+            out = [CompletionItem(
+                "https://cdn.jsdelivr.net/npm/alpinejs@3.15.11/dist/cdn.min.js",
+                kind=[KindId.MARKUP, 'c', 'CDN'],
+                annotation='Alpine.js v3.15.11'
+            )]
+            return CompletionList(out)
+
+        # 2. CONTEXTO: Dentro de un VALOR de atributo (x-text="...", @click="...")
         attr_value_match = re.search(r'(?:x-(?:show|text|html|model|modelable|ref|bind|on|data|effect|init)|[@:])[\w\.:-]*=["\'][^"\']*$', line_prefix)
         if attr_value_match:
             content = view.substr(Region(0, view.size()))
