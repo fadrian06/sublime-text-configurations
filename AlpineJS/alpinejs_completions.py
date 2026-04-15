@@ -13,41 +13,99 @@ class AlpineJsCompletions(EventListener):
         locations: List[Point],
     ) -> CompletionList:
         pt = locations[0]
-        
-        # 1. Verificar contexto: ¿Estamos dentro de un valor de atributo Alpine?
-        # Obtenemos el texto de la línea hasta el cursor
         line_prefix = view.substr(Region(view.line(pt).a, pt))
-        # Buscamos si el cursor está precedido por un atributo Alpine (incluyendo shorthands como @ y :) seguido de comillas abiertas
-        # Soporta: x-on:click, @click, x-bind:class, :class, x-text, etc.
-        attr_match = re.search(r'(?:x-(?:show|text|html|model|modelable|ref|bind|on|data|effect|init)|[@:])[\w\.:-]*=["\'][^"\']*$', line_prefix)
         
         kind_directive = [KindId.NAMESPACE, 'd', 'Alpine.js Directive']
         kind_property = [KindId.VARIABLE, 'p', 'Alpine.js Property']
+        kind_modifier = [KindId.KEYWORD, 'm', 'Modifier']
+        kind_event = [KindId.FUNCTION, 'e', 'Event']
 
-        if attr_match:
-            # CONTEXTO: Dentro de un atributo (Sugerir propiedades de x-data)
+        # 1. CONTEXTO: Dentro de un VALOR de atributo (x-on="...", x-text="...")
+        attr_value_match = re.search(r'(?:x-(?:show|text|html|model|modelable|ref|bind|on|data|effect|init)|[@:])[\w\.:-]*=["\'][^"\']*$', line_prefix)
+        if attr_value_match:
             content = view.substr(Region(0, view.size()))
-            # Buscamos patrones x-data="{ prop: val }"
             x_data_matches = re.findall(r'x-data\s*=\s*["\']\{\s*([^}]*)\s*\}["\']', content)
             
             properties = set()
             for match in x_data_matches:
-                # Extraemos las llaves definidas (ej: "message:" -> "message")
                 keys = re.findall(r'(\w+)\s*:', match)
                 for key in keys:
                     properties.add(key)
 
             out = []
+            # Añadir propiedades de x-data
             for prop in sorted(list(properties)):
                 if prop.lower().startswith(prefix.lower()):
-                    out.append(CompletionItem(
-                        prop,
-                        kind=kind_property,
-                        details='Defined in x-data'
-                    ))
+                    out.append(CompletionItem(prop, kind=kind_property, details='Defined in x-data'))
+            
+            # Añadir variables mágicas comunes
+            magics = ['$event', '$dispatch', '$nextTick', '$refs', '$el', '$watch', '$root', '$data', '$id']
+            for magic in magics:
+                if magic.lower().startswith(prefix.lower()) or (prefix.startswith('$') and magic.lower().startswith(prefix.lower())):
+                    out.append(CompletionItem(magic, kind=[KindId.SNIPPET, 'v', 'Magic Variable']))
+
             return CompletionList(out)
 
-        # CONTEXTO: Fuera de atributos (Sugerir directivas x-*)
+        # 2. CONTEXTO: Dentro de un NOMBRE de atributo (x-on:..., @...)
+        # Caso A: Modificadores (después de un punto en x-on o @)
+        modifier_match = re.search(r'(?:x-on:|@)[\w-]+(?:\.[\w-]+)*\.$', line_prefix)
+        if modifier_match:
+            modifiers = [
+                ('prevent', 'Calls event.preventDefault()'),
+                ('stop', 'Calls event.stopPropagation()'),
+                ('outside', 'Listen for events outside element'),
+                ('window', 'Register listener on window'),
+                ('document', 'Register listener on document'),
+                ('once', 'Only call once'),
+                ('debounce', 'Debounce execution (default 250ms)'),
+                ('throttle', 'Throttle execution (default 250ms)'),
+                ('self', 'Only trigger if event originated on self'),
+                ('camel', 'Convert event name to camelCase'),
+                ('dot', 'Convert dashes to dots in event name'),
+                ('passive', 'Mark listener as passive'),
+                ('capture', 'Execute during capturing phase'),
+                # Keyboard/Mouse modifiers
+                ('enter', 'Key: Enter'), ('space', 'Key: Space'), ('tab', 'Key: Tab'),
+                ('escape', 'Key: Escape'), ('up', 'Key: Up'), ('down', 'Key: Down'),
+                ('left', 'Key: Left'), ('right', 'Key: Right'),
+                ('shift', 'Modifier: Shift'), ('ctrl', 'Modifier: Ctrl'),
+                ('alt', 'Modifier: Alt'), ('meta', 'Modifier: Meta'), ('cmd', 'Modifier: Cmd')
+            ]
+            out = []
+            for mod, detail in modifiers:
+                out.append(CompletionItem(mod, kind=kind_modifier, details=detail))
+            return CompletionList(out)
+
+        # Caso B: Eventos (después de x-on: o @)
+        event_match = re.search(r'(?:x-on:|@)$', line_prefix)
+        if event_match:
+            events = [
+                # Window
+                'afterprint', 'beforeprint', 'beforeunload', 'error', 'hashchange', 'load', 'message',
+                'offline', 'online', 'pagehide', 'pageshow', 'popstate', 'resize', 'storage', 'unload',
+                # Form
+                'blur', 'change', 'contextmenu', 'focus', 'input', 'invalid', 'reset', 'search', 'select', 'submit',
+                # Keyboard
+                'keydown', 'keypress', 'keyup',
+                # Mouse
+                'click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup', 'mousewheel', 'wheel',
+                # Drag
+                'drag', 'dragend', 'dragenter', 'dragleave', 'dragover', 'dragstart', 'drop', 'scroll',
+                # Clipboard
+                'copy', 'cut', 'paste',
+                # Media
+                'abort', 'canplay', 'canplaythrough', 'cuechange', 'durationchange', 'emptied', 'ended',
+                'loadeddata', 'loadedmetadata', 'loadstart', 'pause', 'play', 'playing', 'progress',
+                'ratechange', 'seeked', 'seeking', 'stalled', 'suspend', 'timeupdate', 'volumechange', 'waiting',
+                # Misc
+                'toggle'
+            ]
+            out = []
+            for event in sorted(list(set(events))):
+                out.append(CompletionItem(event, kind=kind_event))
+            return CompletionList(out)
+
+        # 3. CONTEXTO: Sugerir directivas x-* (comportamiento base)
         if not view.match_selector(pt, 'text.html meta.tag'):
             return []
 
@@ -63,8 +121,6 @@ class AlpineJsCompletions(EventListener):
             CompletionItem.snippet_completion('x-modalable', 'x-modalable="$1"', kind=kind_directive),
             CompletionItem.snippet_completion('x-for', 'x-for="$1"', kind=kind_directive),
             CompletionItem('x-transition', kind=kind_directive),
-            CompletionItem.snippet_completion('x-effect', 'x-effect="$1"', kind=kind_directive),
-            CompletionItem('x-ignore', kind=kind_directive),
             CompletionItem.snippet_completion('x-ref', 'x-ref="$1"', kind=kind_directive),
             CompletionItem('x-cloak', kind=kind_directive),
             CompletionItem.snippet_completion('x-teleport', 'x-teleport="$1"', kind=kind_directive),
