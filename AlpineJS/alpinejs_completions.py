@@ -52,6 +52,11 @@ class AlpineJsCompletions(EventListener):
             return CompletionList(out)
 
         # 3. CONTEXTO: Dentro de un NOMBRE de atributo (x-on:..., @...)
+        
+        # Verificar si ya existe una asignación (="") después del cursor
+        line_suffix = view.substr(Region(pt, view.line(pt).b))
+        has_assignment = re.match(r'^\s*=', line_suffix)
+
         # Caso A: Modificadores (ej: @click.prevent)
         last_word = line_prefix.split()[-1] if line_prefix.strip() else ""
         if '.' in last_word:
@@ -71,12 +76,15 @@ class AlpineJsCompletions(EventListener):
                 
                 out = []
                 for mod, desc in modifiers:
-                    out.append(CompletionItem.snippet_completion(
-                        mod,
-                        mod + '="$1"',
-                        kind=kind_modifier,
-                        details=desc
-                    ))
+                    if has_assignment:
+                        out.append(CompletionItem(mod, kind=kind_modifier, details=desc))
+                    else:
+                        out.append(CompletionItem.snippet_completion(
+                            mod,
+                            mod + '="$1"',
+                            kind=kind_modifier,
+                            details=desc
+                        ))
                 return CompletionList(out)
 
         # Caso B: Eventos (ej: @click, x-on:submit)
@@ -95,11 +103,14 @@ class AlpineJsCompletions(EventListener):
             
             out = []
             for event in sorted(list(set(events))):
-                out.append(CompletionItem.snippet_completion(
-                    event,
-                    event + '="$1"',
-                    kind=kind_event
-                ))
+                if has_assignment:
+                    out.append(CompletionItem(event, kind=kind_event))
+                else:
+                    out.append(CompletionItem.snippet_completion(
+                        event,
+                        event + '="$1"',
+                        kind=kind_event
+                    ))
             return CompletionList(out)
 
         # 4. CONTEXTO: Directivas base x-*
