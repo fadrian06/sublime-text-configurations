@@ -29,4 +29,10 @@
     ],
     "command": "side_bar_duplicate",
   },
+  {
+    "keys": [
+      "ctrl+alt+n"
+    ],
+    "command": "side_bar_new_file",
+  },
 ]
