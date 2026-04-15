@@ -24,11 +24,15 @@
   "auto_complete_triggers": [
     {
       "characters": "<",
-      "selector": "text.html, text.xml",
+      "selector": "text.html, text.xml"
+    },
+    {
+      "characters": ".@:",
+      "selector": "text.html"
     },
     {
       "rhs_empty": true,
-      "selector": "punctuation.accessor",
+      "selector": "punctuation.accessor"
     }
   ],
   "auto_complete_use_history": true,

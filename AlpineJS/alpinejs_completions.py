@@ -1,27 +1,11 @@
 import re
-from sublime import View, CompletionList, CompletionItem, Region, CompletionFormat
+from sublime import View, CompletionList, CompletionItem, Region
 from sublime_plugin import EventListener
 from typing import List
 from sublime_types import Point, KindId
 
 
 class AlpineJsCompletions(EventListener):
-    def on_modified_async(self, view: View):
-        if view.settings().get('is_widget'):
-            return
-        if not view.sel():
-            return
-        pt = view.sel()[0].b
-        if pt == 0:
-            return
-        char = view.substr(Region(pt - 1, pt))
-        if char in ":@.":
-            if view.match_selector(pt, "text.html meta.tag"):
-                view.run_command("auto_complete", {
-                    "disable_auto_insert": True,
-                    "next_completion_if_showing": False
-                })
-
     def on_query_completions(
         self,
         view: View,
@@ -87,8 +71,6 @@ class AlpineJsCompletions(EventListener):
                 
                 out = []
                 for mod, desc in modifiers:
-                    # Si el modificador no termina en punto, añadimos el snippet para cerrar el atributo
-                    # Si ya hay un punto después (porque estamos encadenando), solo insertamos el nombre
                     out.append(CompletionItem.snippet_completion(
                         mod,
                         mod + '="$1"',
@@ -113,7 +95,6 @@ class AlpineJsCompletions(EventListener):
             
             out = []
             for event in sorted(list(set(events))):
-                # Usamos snippet para que al seleccionar el evento inserte evento="$1"
                 out.append(CompletionItem.snippet_completion(
                     event,
                     event + '="$1"',
