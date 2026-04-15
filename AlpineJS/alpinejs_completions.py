@@ -69,12 +69,12 @@ class AlpineJsCompletions(EventListener):
                 out = []
                 ignored_keys = {'get', 'set', 'return', 'if', 'else', 'this'}
                 
-                # Añadir variables de iteración (con icono 'v')
+                # Añadir variables de iteración (v)
                 for var in sorted(list(iteration_vars)):
                     if var not in ignored_keys:
                         out.append(CompletionItem(var, kind=kind_variable, details='Iteration Variable'))
 
-                # Añadir propiedades de x-data (con icono 'p')
+                # Añadir propiedades de x-data (p)
                 for prop in sorted(list(properties)):
                     if prop not in ignored_keys and prop not in iteration_vars:
                         out.append(CompletionItem(prop, kind=kind_property, details='Defined in x-data'))
@@ -138,6 +138,7 @@ class AlpineJsCompletions(EventListener):
         # 4. CONTEXTO: Directivas base x-* 
         if view.match_selector(pt, 'text.html meta.tag - string - meta.attribute-with-value'):
             if not re.search(r'=\s*["\'][^"\']*$', wide_context, re.DOTALL):
+                # Detectar el nombre de la etiqueta actual
                 tag_name_match = re.search(r'<(\w+)[^>]*$', wide_context)
                 is_template = tag_name_match and tag_name_match.group(1).lower() == 'template'
 
@@ -162,19 +163,19 @@ class AlpineJsCompletions(EventListener):
                 else:
                     out = [
                         CompletionItem.snippet_completion('x-data', 'x-data="{ $1 }"', kind=kind_directive),
-                        CompletionItem.snippet_completion('x-init', 'x-init="$1"'),
-                        CompletionItem.snippet_completion('x-show', 'x-show="$1"'),
-                        CompletionItem.snippet_completion('x-bind', 'x-bind:$1="$2"'),
-                        CompletionItem.snippet_completion('x-on', 'x-on:$1="$2"'),
-                        CompletionItem.snippet_completion('x-text', 'x-text="$1"'),
-                        CompletionItem.snippet_completion('x-html', 'x-html="$1"'),
-                        CompletionItem.snippet_completion('x-model', 'x-model="$1"'),
-                        CompletionItem.snippet_completion('x-modalable', 'x-modalable="$1"'),
+                        CompletionItem.snippet_completion('x-init', 'x-init="$1"', kind=kind_directive),
+                        CompletionItem.snippet_completion('x-show', 'x-show="$1"', kind=kind_directive),
+                        CompletionItem.snippet_completion('x-bind', 'x-bind:$1="$2"', kind=kind_directive),
+                        CompletionItem.snippet_completion('x-on', 'x-on:$1="$2"', kind=kind_directive),
+                        CompletionItem.snippet_completion('x-text', 'x-text="$1"', kind=kind_directive),
+                        CompletionItem.snippet_completion('x-html', 'x-html="$1"', kind=kind_directive),
+                        CompletionItem.snippet_completion('x-model', 'x-model="$1"', kind=kind_directive),
+                        CompletionItem.snippet_completion('x-modalable', 'x-modalable="$1"', kind=kind_directive),
                         CompletionItem('x-transition', kind=kind_directive),
-                        CompletionItem.snippet_completion('x-ref', 'x-ref="$1"'),
+                        CompletionItem.snippet_completion('x-ref', 'x-ref="$1"', kind=kind_directive),
                         CompletionItem('x-cloak', kind=kind_directive),
-                        CompletionItem.snippet_completion('x-if', 'x-if="$1"'),
-                        CompletionItem.snippet_completion('x-id', 'x-id="$1"'),
+                        CompletionItem.snippet_completion('x-if', 'x-if="$1"', kind=kind_directive),
+                        CompletionItem.snippet_completion('x-id', 'x-id="$1"', kind=kind_directive),
                     ]
 
                 return CompletionList(out)
