@@ -11,3 +11,4 @@ SublimeLinter-php-cs-fixer
 SublimeLinter-phpmd
 Transparency
 zzz A File Icon
+__pycache__
