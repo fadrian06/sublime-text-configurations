@@ -213,6 +213,7 @@ class AlpineJsCompletions(EventListener):
         kind_directive = [KindId.NAMESPACE, 'd', 'Alpine.js Directive']
         kind_data = [KindId.NAMESPACE, 'd', 'Alpine.js Data']
         kind_store = [KindId.NAMESPACE, 's', 'Alpine.js Store']
+        kind_attribute = [KindId.MARKUP, 'a', 'Bindable Attribute']
         kind_method = [KindId.FUNCTION, 'm', 'Alpine.js Method']
         kind_property = [KindId.VARIABLE, 'p', 'Alpine.js Property']
         kind_variable = [KindId.VARIABLE, 'v', 'Alpine.js Variable']
@@ -348,6 +349,41 @@ class AlpineJsCompletions(EventListener):
                    for event in sorted(events)]
             return CompletionList(out, flags=sublime.INHIBIT_WORD_COMPLETIONS)
 
+        if re.search(r'(?:x-bind:|:)[\w:-]*$', line_prefix):
+            line_suffix = view.substr(Region(pt, view.line(pt).b))
+            has_assignment = bool(re.match(r'^\s*=', line_suffix))
+            bind_targets = [
+                ('class', 'Bind CSS classes'),
+                ('style', 'Bind inline styles'),
+                ('placeholder', 'Bind placeholder text'),
+                ('value', 'Bind input value'),
+                ('type', 'Bind input type'),
+                ('disabled', 'Bind disabled state'),
+                ('checked', 'Bind checked state'),
+                ('selected', 'Bind selected state'),
+                ('readonly', 'Bind readonly state'),
+                ('required', 'Bind required state'),
+                ('hidden', 'Bind hidden state'),
+                ('open', 'Bind open state'),
+                ('id', 'Bind element id'),
+                ('name', 'Bind form name'),
+                ('for', 'Bind label target'),
+                ('tabindex', 'Bind tab order'),
+                ('role', 'Bind ARIA role'),
+                ('href', 'Bind link destination'),
+                ('src', 'Bind source URL'),
+                ('alt', 'Bind alt text'),
+                ('title', 'Bind title text'),
+                ('aria-label', 'Bind accessible label'),
+                ('aria-expanded', 'Bind expanded state'),
+                ('aria-controls', 'Bind controlled element'),
+                ('aria-hidden', 'Bind hidden state'),
+            ]
+            out = [CompletionItem(target, kind=kind_attribute, details=desc) if has_assignment else
+                   CompletionItem.snippet_completion(target, target + '="$1"', kind=kind_attribute, details=desc)
+                   for target, desc in bind_targets]
+            return CompletionList(out, flags=sublime.INHIBIT_WORD_COMPLETIONS)
+
         if re.search(r'x-transition:[\w-]*$', line_prefix):
             line_suffix = view.substr(Region(pt, view.line(pt).b))
             has_assignment = bool(re.match(r'^\s*=', line_suffix))
@@ -377,6 +413,10 @@ class AlpineJsCompletions(EventListener):
                        CompletionItem.snippet_completion('x-init', 'x-init="$1"', kind=kind_directive),
                        CompletionItem.snippet_completion('x-show', 'x-show="$1"', kind=kind_directive),
                        CompletionItem.snippet_completion('x-bind', 'x-bind:$1="$2"', kind=kind_directive),
+                       CompletionItem.snippet_completion(':class', ':class="$1"', kind=kind_attribute, details='Bind CSS classes'),
+                       CompletionItem.snippet_completion(':style', ':style="$1"', kind=kind_attribute, details='Bind inline styles'),
+                       CompletionItem.snippet_completion(':disabled', ':disabled="$1"', kind=kind_attribute, details='Bind disabled state'),
+                       CompletionItem.snippet_completion(':placeholder', ':placeholder="$1"', kind=kind_attribute, details='Bind placeholder text'),
                        CompletionItem.snippet_completion('x-on', 'x-on:$1="$2"', kind=kind_directive),
                        CompletionItem.snippet_completion('x-text', 'x-text="$1"', kind=kind_directive),
                        CompletionItem.snippet_completion('x-html', 'x-html="$1"', kind=kind_directive),
