@@ -6,6 +6,31 @@ from sublime_types import Point, KindId
 
 
 class AlpineJsCompletions(EventListener):
+    def on_modified_async(self, view: View):
+        # Evitar disparar en la consola o widgets
+        if view.settings().get('is_widget'):
+            return
+            
+        # Obtener el punto actual del cursor
+        if not view.sel():
+            return
+        pt = view.sel()[0].b
+        if pt == 0:
+            return
+            
+        # Verificar el último carácter escrito
+        char = view.substr(Region(pt - 1, pt))
+        
+        # Si es uno de nuestros disparadores, forzamos el autocompletado
+        if char in ":@.":
+            # Solo si estamos dentro de una etiqueta HTML
+            if view.match_selector(pt, "text.html meta.tag"):
+                # Pequeño retardo para dejar que el buffer se actualice
+                view.run_command("auto_complete", {
+                    "disable_auto_insert": True,
+                    "next_completion_if_showing": False
+                })
+
     def on_query_completions(
         self,
         view: View,
@@ -51,11 +76,11 @@ class AlpineJsCompletions(EventListener):
 
             return CompletionList(out)
 
-        # 2. CONTEXTO: Dentro de un NOMBRE de atributo (x-on:..., @...)
-        # Caso A: Modificadores (ej: @click.prevent) - Se activa al escribir un punto
-        if '.' in line_prefix.split()[-1] if line_prefix.strip() else False:
-            # Solo si el atributo base es Alpine (@ o x-on:)
-            attr_base = line_prefix.split()[-1].split('.')[0]
+        # 3. CONTEXTO: Dentro de un NOMBRE de atributo (x-on:..., @...)
+        # Caso A: Modificadores (ej: @click.prevent)
+        last_word = line_prefix.split()[-1] if line_prefix.strip() else ""
+        if '.' in last_word:
+            attr_base = last_word.split('.')[0]
             if attr_base.startswith('@') or attr_base.startswith('x-on:'):
                 modifiers = [
                     ('prevent', 'preventDefault'), ('stop', 'stopPropagation'), ('outside', 'Outside element'),
@@ -71,23 +96,22 @@ class AlpineJsCompletions(EventListener):
                 return CompletionList(out)
 
         # Caso B: Eventos (ej: @click, x-on:submit)
-        # Buscamos si el cursor está justo después de @ o x-on: (permitiendo caracteres ya escritos)
         if re.search(r'(?:x-on:|@)[\w-]*$', line_prefix):
             events = [
                 'afterprint', 'beforeprint', 'beforeunload', 'error', 'hashchange', 'load', 'message',
                 'offline', 'online', 'pagehide', 'pageshow', 'popstate', 'resize', 'storage', 'unload',
                 'blur', 'change', 'contextmenu', 'focus', 'input', 'invalid', 'reset', 'search', 'select', 'submit',
-                'keydown', 'keypress', 'keyup', 'click', 'dblclick', 'mousedown', 'mousemove', 'mouseout',
-                'mouseover', 'mouseup', 'mousewheel', 'wheel', 'drag', 'dragend', 'dragenter', 'dragleave',
-                'dragover', 'dragstart', 'drop', 'scroll', 'copy', 'cut', 'paste', 'abort', 'canplay',
-                'canplaythrough', 'cuechange', 'durationchange', 'emptied', 'ended', 'loadeddata',
-                'loadedmetadata', 'loadstart', 'pause', 'play', 'playing', 'progress', 'ratechange',
+                'keydown', 'keypress', 'keyup', 'click', 'dblclick', 'mousedown', 'mousemove', 'mouseout', 
+                'mouseover', 'mouseup', 'mousewheel', 'wheel', 'drag', 'dragend', 'dragenter', 'dragleave', 
+                'dragover', 'dragstart', 'drop', 'scroll', 'copy', 'cut', 'paste', 'abort', 'canplay', 
+                'canplaythrough', 'cuechange', 'durationchange', 'emptied', 'ended', 'loadeddata', 
+                'loadedmetadata', 'loadstart', 'pause', 'play', 'playing', 'progress', 'ratechange', 
                 'seeked', 'seeking', 'stalled', 'suspend', 'timeupdate', 'volumechange', 'waiting', 'toggle'
             ]
             out = [CompletionItem(event, kind=kind_event) for event in sorted(list(set(events)))]
             return CompletionList(out)
 
-        # 3. CONTEXTO: Directivas base x-*
+        # 4. CONTEXTO: Directivas base x-*
         if view.match_selector(pt, 'text.html meta.tag'):
             available_completions = [
                 CompletionItem.snippet_completion('x-data', 'x-data="{ $1 }"', kind=kind_directive),
