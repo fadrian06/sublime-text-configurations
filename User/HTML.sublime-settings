@@ -1,0 +1,7 @@
+// These settings override both User and Default settings for the HTML syntax
+{
+  "default_completions_selector": [
+    "text.html - text.html meta.embedded - text.html meta.interpolation - text.html source - (text.html.markdown - markup.raw.code-fence text.html), ",
+    "text.html.embedded - text.html.embedded meta.embedded - text.html.embedded meta.interpolation - text.html.embedded source"
+  ]
+}
