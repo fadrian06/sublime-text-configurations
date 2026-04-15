@@ -50,8 +50,33 @@ class AlpineJsCompletions(EventListener):
 
         return definitions
 
+    def get_registered_store_definitions(self, view: View) -> Dict[str, Dict[str, str]]:
+        content = view.substr(Region(0, view.size()))
+        definitions: Dict[str, Dict[str, str]] = {}
+        pattern = re.compile(r'Alpine\.store\(\s*(["\'])([\w-]+)\1\s*,', re.DOTALL)
+
+        for match in pattern.finditer(content):
+            store_name = match.group(2)
+            search_start = match.end()
+
+            object_start = content.find('{', search_start)
+            if object_start == -1:
+                continue
+
+            closing_brace_index = self.find_matching_brace(content, object_start)
+            if closing_brace_index == -1:
+                continue
+
+            block_content = content[object_start + 1:closing_brace_index]
+            definitions[store_name] = self.extract_x_data_members(block_content)
+
+        return definitions
+
     def get_registered_data_names(self, view: View) -> Set[str]:
         return set(self.get_registered_data_definitions(view).keys())
+
+    def get_registered_store_names(self, view: View) -> Set[str]:
+        return set(self.get_registered_store_definitions(view).keys())
 
     def resolve_x_data_members(self, block_content: str, registered_data: Dict[str, Dict[str, str]]) -> Dict[str, str]:
         stripped_content = block_content.strip()
@@ -187,6 +212,7 @@ class AlpineJsCompletions(EventListener):
         
         kind_directive = [KindId.NAMESPACE, 'd', 'Alpine.js Directive']
         kind_data = [KindId.NAMESPACE, 'd', 'Alpine.js Data']
+        kind_store = [KindId.NAMESPACE, 's', 'Alpine.js Store']
         kind_method = [KindId.FUNCTION, 'm', 'Alpine.js Method']
         kind_property = [KindId.VARIABLE, 'p', 'Alpine.js Property']
         kind_variable = [KindId.VARIABLE, 'v', 'Alpine.js Variable']
@@ -207,9 +233,29 @@ class AlpineJsCompletions(EventListener):
         if is_inside:
             if attr_name:
                 members = self.get_active_x_data_members(view, pt)
+                store_definitions = self.get_registered_store_definitions(view)
 
                 ignored_keys = {'get', 'set', 'return', 'if', 'else', 'this'}
                 out = []
+
+                store_member_match = re.search(r'\$store\.(\w+)\.(\w*)$', line_prefix)
+                if store_member_match:
+                    store_name, store_prefix = store_member_match.groups()
+                    store_members = store_definitions.get(store_name, {})
+                    for member_name in sorted(list(store_members)):
+                        if member_name not in ignored_keys and member_name.lower().startswith(store_prefix.lower()):
+                            member_kind = kind_method if store_members[member_name] == 'method' else kind_property
+                            member_detail = 'Store Method' if store_members[member_name] == 'method' else 'Store Property'
+                            out.append(CompletionItem(member_name, kind=member_kind, details=member_detail))
+                    return CompletionList(out, flags=sublime.INHIBIT_WORD_COMPLETIONS)
+
+                store_match = re.search(r'\$store\.(\w*)$', line_prefix)
+                if store_match:
+                    store_prefix = store_match.group(1).lower()
+                    for store_name in sorted(list(self.get_registered_store_names(view))):
+                        if store_name not in ignored_keys and store_name.lower().startswith(store_prefix):
+                            out.append(CompletionItem(store_name, kind=kind_store, details='Registered Alpine.store'))
+                    return CompletionList(out, flags=sublime.INHIBIT_WORD_COMPLETIONS)
 
                 # Caso A: this.
                 this_match = re.search(r'\bthis\.(\w*)$', line_prefix)
@@ -241,7 +287,7 @@ class AlpineJsCompletions(EventListener):
                     if data_name not in ignored_keys:
                         completions.append(CompletionItem(data_name, kind=kind_data, details='Reusable Alpine.data'))
                 
-                magics = ['$event', '$dispatch', '$nextTick', '$refs', '$el', '$watch', '$root', '$data', '$id']
+                magics = ['$event', '$dispatch', '$nextTick', '$refs', '$el', '$watch', '$root', '$data', '$id', '$store']
                 for magic in magics:
                     completions.append(CompletionItem(magic, kind=[KindId.SNIPPET, 'v', 'Magic Variable']))
 
