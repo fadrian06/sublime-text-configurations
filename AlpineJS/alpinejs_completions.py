@@ -7,6 +7,59 @@ from sublime_types import Point, KindId
 
 
 class AlpineJsCompletions(EventListener):
+    def get_current_open_tag(self, view: View, pt: Point) -> Optional[Tuple[int, int, str, str, bool]]:
+        content = view.substr(Region(0, view.size()))
+        current_tag: Optional[Tuple[int, int, str, str, bool]] = None
+
+        for tag_start, tag_end, is_closing, tag_name, attrs, self_closing in self.iter_html_tags(content):
+            if tag_start > pt:
+                break
+
+            if not is_closing and tag_start <= pt <= tag_end:
+                current_tag = (tag_start, tag_end, tag_name.lower(), attrs, self_closing)
+                break
+
+        return current_tag
+
+    def get_descendant_custom_event_names(self, view: View, pt: Point) -> Set[str]:
+        current_tag = self.get_current_open_tag(view, pt)
+        if current_tag is None:
+            return set()
+
+        current_tag_start, current_tag_end, current_tag_name, _, self_closing = current_tag
+        if self_closing:
+            return set()
+
+        content = view.substr(Region(0, view.size()))
+        depth = 0
+        subtree_end: Optional[int] = None
+        entered_current_tag = False
+
+        for tag_start, tag_end, is_closing, tag_name, _, tag_self_closing in self.iter_html_tags(content):
+            tag_name = tag_name.lower()
+
+            if not entered_current_tag:
+                if tag_start == current_tag_start and not is_closing:
+                    entered_current_tag = True
+                    depth = 1
+                continue
+
+            if is_closing and tag_name == current_tag_name:
+                depth -= 1
+                if depth == 0:
+                    subtree_end = tag_start
+                    break
+                continue
+
+            if not is_closing and tag_name == current_tag_name and not tag_self_closing:
+                depth += 1
+
+        if subtree_end is None or subtree_end <= current_tag_end:
+            return set()
+
+        subtree_content = content[current_tag_end:subtree_end]
+        return set(re.findall(r'\$dispatch\(\s*["\']([\w:-]+)["\']', subtree_content))
+
     def iter_html_tags(self, content: str):
         index = 0
 
@@ -306,6 +359,7 @@ class AlpineJsCompletions(EventListener):
         kind_data = [KindId.NAMESPACE, 'd', 'Alpine.js Data']
         kind_store = [KindId.NAMESPACE, 's', 'Alpine.js Store']
         kind_attribute = [KindId.MARKUP, 'a', 'Bindable Attribute']
+        kind_custom_event = [KindId.FUNCTION, 'c', 'Custom Event']
         kind_method = [KindId.FUNCTION, 'm', 'Alpine.js Method']
         kind_property = [KindId.VARIABLE, 'p', 'Alpine.js Property']
         kind_variable = [KindId.VARIABLE, 'v', 'Alpine.js Variable']
@@ -473,6 +527,7 @@ class AlpineJsCompletions(EventListener):
                 return CompletionList(out, flags=sublime.INHIBIT_WORD_COMPLETIONS)
 
         if re.search(r'(?:x-on:|@)[\w-]*$', line_prefix):
+            custom_events = self.get_descendant_custom_event_names(view, pt)
             events = [
                 'click', 'submit', 'input', 'change', 'focus', 'blur', 'keydown', 'keyup',
                 'keypress', 'mousedown', 'mouseup', 'mousemove', 'mouseenter', 'mouseleave',
@@ -483,9 +538,14 @@ class AlpineJsCompletions(EventListener):
             ]
             line_suffix = view.substr(Region(pt, view.line(pt).b))
             has_assignment = bool(re.match(r'^\s*=', line_suffix))
-            out = [CompletionItem(event, kind=kind_event) if has_assignment else 
-                   CompletionItem.snippet_completion(event, event + '="$1"', kind=kind_event)
-                   for event in sorted(events)]
+            out = [CompletionItem(event, kind=kind_custom_event, details='Custom event dispatched in children') if has_assignment else
+                   CompletionItem.snippet_completion(event, event + '="$1"', kind=kind_custom_event, details='Custom event dispatched in children')
+                   for event in sorted(custom_events)]
+            out.extend([
+                CompletionItem(event, kind=kind_event) if has_assignment else
+                CompletionItem.snippet_completion(event, event + '="$1"', kind=kind_event)
+                for event in sorted(events) if event not in custom_events
+            ])
             return CompletionList(out, flags=sublime.INHIBIT_WORD_COMPLETIONS)
 
         if re.search(r'(?:x-bind:|:)[\w:-]*$', line_prefix):
