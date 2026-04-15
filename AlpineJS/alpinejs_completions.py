@@ -7,6 +7,99 @@ from sublime_types import Point, KindId
 
 
 class AlpineJsCompletions(EventListener):
+    def iter_html_tags(self, content: str):
+        index = 0
+
+        while index < len(content):
+            if content[index] != '<':
+                index += 1
+                continue
+
+            tag_start = index
+            index += 1
+            quote_type: Optional[str] = None
+
+            while index < len(content):
+                char = content[index]
+                if quote_type:
+                    if char == quote_type:
+                        quote_type = None
+                else:
+                    if char in ('"', "'"):
+                        quote_type = char
+                    elif char == '>':
+                        tag_end = index + 1
+                        tag_content = content[tag_start + 1:index].strip()
+
+                        if tag_content and not tag_content.startswith(('!', '?')):
+                            is_closing = tag_content.startswith('/')
+                            if is_closing:
+                                tag_content = tag_content[1:].lstrip()
+
+                            self_closing = tag_content.endswith('/')
+                            if self_closing:
+                                tag_content = tag_content[:-1].rstrip()
+
+                            tag_name_match = re.match(r'([\w:-]+)', tag_content)
+                            if tag_name_match:
+                                tag_name = tag_name_match.group(1)
+                                attrs = tag_content[tag_name_match.end():]
+                                yield tag_start, tag_end, is_closing, tag_name, attrs, self_closing
+
+                        index = tag_end
+                        break
+
+                index += 1
+
+    def get_current_tag_context(self, view: View, pt: Point) -> Optional[str]:
+        limit = max(0, pt - 5000)
+        text = view.substr(Region(limit, pt))
+        tag_start: Optional[int] = None
+        in_tag = False
+        quote_type: Optional[str] = None
+
+        for index, char in enumerate(text):
+            if not in_tag:
+                if char == '<':
+                    in_tag = True
+                    tag_start = index
+                continue
+
+            if quote_type:
+                if char == quote_type:
+                    quote_type = None
+                continue
+
+            if char in ('"', "'"):
+                quote_type = char
+            elif char == '>':
+                in_tag = False
+                tag_start = None
+
+        if not in_tag or tag_start is None:
+            return None
+
+        return text[tag_start:]
+
+    def get_current_alpine_attribute_context(self, view: View, pt: Point) -> Tuple[Optional[str], bool, str]:
+        tag_context = self.get_current_tag_context(view, pt)
+        if tag_context is None:
+            return None, False, ''
+
+        matches = list(re.finditer(r'([\w\.:@-]+)\s*=\s*(["\'])', tag_context))
+
+        for match in reversed(matches):
+            attr_name = match.group(1)
+            quote_type = match.group(2)
+            start_pos = match.end()
+            content_after_attr = tag_context[start_pos:]
+
+            if quote_type not in content_after_attr:
+                is_alpine = attr_name.startswith(('x-', '@', ':'))
+                return (attr_name if is_alpine else None), True, content_after_attr
+
+        return None, False, ''
+
     def merge_member_maps(self, *member_maps: Dict[str, str]) -> Dict[str, str]:
         merged: Dict[str, str] = {}
         for member_map in member_maps:
@@ -115,16 +208,12 @@ class AlpineJsCompletions(EventListener):
         """
         content = view.substr(Region(0, view.size()))
         registered_data = self.get_registered_data_definitions(view)
-        tag_pattern = re.compile(r'<(/?)([\w:-]+)([^<>]*?)(/?)>', re.DOTALL)
         x_data_pattern = re.compile(r'x-data\s*=\s*(?P<q>["\'])(.*?)(?P=q)', re.DOTALL)
         stack: List[Tuple[str, Dict[str, str]]] = []
 
-        for match in tag_pattern.finditer(content):
-            tag_start, tag_end = match.span()
+        for tag_start, tag_end, is_closing, tag_name, attrs, self_closing in self.iter_html_tags(content):
             if tag_start > pt:
                 break
-
-            is_closing, tag_name, attrs, self_closing = match.groups()
             tag_name = tag_name.lower()
 
             if is_closing:
@@ -157,30 +246,33 @@ class AlpineJsCompletions(EventListener):
         Encuentra el nombre del atributo Alpine en el que se encuentra el cursor.
         Retorna (nombre_del_atributo, esta_dentro_de_comillas).
         """
-        limit = max(0, pt - 1500)
-        text = view.substr(Region(limit, pt))
-        tag_start = text.rfind('<')
-        if tag_start == -1: return None, False
-        
-        tag_context = text[tag_start:]
-        
-        # Encontrar todas las aperturas de atributos: attr=" o attr='
-        matches = list(re.finditer(r'([\w\.:@-]+)\s*=\s*(["\'])', tag_context))
-        
-        for match in reversed(matches):
-            attr_name = match.group(1)
-            quote_type = match.group(2)
-            start_pos = match.end()
-            
-            # Contenido desde la apertura hasta el cursor
-            content_after_attr = tag_context[start_pos:]
-            
-            # Si esta comilla no se ha cerrado (contamos cuántas hay después del mismo tipo)
-            if content_after_attr.count(quote_type) % 2 == 0:
-                is_alpine = attr_name.startswith(('x-', '@', ':'))
-                return (attr_name if is_alpine else None), True
-                
-        return None, False
+        attr_name, is_inside, _ = self.get_current_alpine_attribute_context(view, pt)
+        return attr_name, is_inside
+
+    def is_inside_alpine_expression_string(self, view: View, pt: Point) -> bool:
+        attr_name, is_inside, content_before_cursor = self.get_current_alpine_attribute_context(view, pt)
+        if not is_inside or not attr_name:
+            return False
+
+        string_quote: Optional[str] = None
+        escaped = False
+
+        for char in content_before_cursor:
+            if escaped:
+                escaped = False
+                continue
+
+            if string_quote:
+                if char == '\\':
+                    escaped = True
+                elif char == string_quote:
+                    string_quote = None
+                continue
+
+            if char in ('"', "'"):
+                string_quote = char
+
+        return string_quote is not None
 
     def get_active_iteration_vars(self, view: View, pt: Point) -> Set[str]:
         """
