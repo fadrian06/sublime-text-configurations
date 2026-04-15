@@ -35,4 +35,21 @@
     ],
     "command": "side_bar_new_file",
   },
+  // Toggle the default shell in panel
+  {
+    "keys": [
+      "alt+t"
+    ],
+    "command": "toggle_terminus_panel"
+  },
+  // Open a terminal tab at current file directory
+  {
+    "keys": [
+      "ctrl+alt+t"
+    ],
+    "command": "terminus_open",
+    "args": {
+      "cwd": "${file_path:${folder}}"
+    }
+  },
 ]
