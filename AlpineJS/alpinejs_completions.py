@@ -2,28 +2,97 @@ import re
 import sublime
 from sublime import View, CompletionList, CompletionItem, Region
 from sublime_plugin import EventListener
-from typing import List, Set, Tuple, Optional
+from typing import Dict, List, Set, Tuple, Optional
 from sublime_types import Point, KindId
 
 
 class AlpineJsCompletions(EventListener):
-    def extract_x_data_properties(self, block_content: str) -> Set[str]:
-        properties = set()
-        properties.update(re.findall(r'(\w+)\s*:', block_content))
-        properties.update(re.findall(r'(?:get|set)?\s*(\w+)\s*\(\)', block_content))
-        properties.update(re.findall(r'(\w+)\s*\([^)]*\)\s*\{', block_content))
-        return properties
+    def merge_member_maps(self, *member_maps: Dict[str, str]) -> Dict[str, str]:
+        merged: Dict[str, str] = {}
+        for member_map in member_maps:
+            merged.update(member_map)
+        return merged
 
-    def get_active_x_data_properties(self, view: View, pt: Point) -> Set[str]:
+    def find_matching_brace(self, content: str, opening_brace_index: int) -> int:
+        depth = 0
+
+        for index in range(opening_brace_index, len(content)):
+            char = content[index]
+            if char == '{':
+                depth += 1
+            elif char == '}':
+                depth -= 1
+                if depth == 0:
+                    return index
+
+        return -1
+
+    def get_registered_data_definitions(self, view: View) -> Dict[str, Dict[str, str]]:
+        content = view.substr(Region(0, view.size()))
+        definitions: Dict[str, Dict[str, str]] = {}
+        pattern = re.compile(r'Alpine\.data\(\s*(["\'])([\w-]+)\1\s*,', re.DOTALL)
+
+        for match in pattern.finditer(content):
+            data_name = match.group(2)
+            search_start = match.end()
+
+            object_start = content.find('({', search_start)
+            if object_start == -1:
+                continue
+
+            opening_brace_index = object_start + 1
+            closing_brace_index = self.find_matching_brace(content, opening_brace_index)
+            if closing_brace_index == -1:
+                continue
+
+            block_content = content[opening_brace_index + 1:closing_brace_index]
+            definitions[data_name] = self.extract_x_data_members(block_content)
+
+        return definitions
+
+    def get_registered_data_names(self, view: View) -> Set[str]:
+        return set(self.get_registered_data_definitions(view).keys())
+
+    def resolve_x_data_members(self, block_content: str, registered_data: Dict[str, Dict[str, str]]) -> Dict[str, str]:
+        stripped_content = block_content.strip()
+        if not stripped_content:
+            return {}
+
+        if stripped_content.startswith('{'):
+            return self.extract_x_data_members(stripped_content)
+
+        data_reference_match = re.match(r'^([\w-]+)\s*(?:\([^)]*\))?$', stripped_content)
+        if data_reference_match:
+            return dict(registered_data.get(data_reference_match.group(1), {}))
+
+        return {}
+
+    def extract_x_data_members(self, block_content: str) -> Dict[str, str]:
+        members: Dict[str, str] = {}
+
+        for prop in re.findall(r'(\w+)\s*:', block_content):
+            members[prop] = 'property'
+
+        for accessor_type, accessor_name in re.findall(r'\b(get|set)\s+(\w+)\s*\([^)]*\)\s*\{', block_content):
+            members[accessor_name] = 'property'
+
+        for method_name in re.findall(r'(\w+)\s*\([^)]*\)\s*\{', block_content):
+            if method_name not in {'get', 'set'}:
+                members[method_name] = 'method'
+
+        return members
+
+    def get_active_x_data_members(self, view: View, pt: Point) -> Dict[str, str]:
         """
         Encuentra las propiedades x-data visibles en la posición actual.
         Respeta el scope HTML: incluye el x-data actual y sus ancestros abiertos,
         pero no los x-data de nodos hijos o hermanos.
         """
         content = view.substr(Region(0, view.size()))
+        registered_data = self.get_registered_data_definitions(view)
         tag_pattern = re.compile(r'<(/?)([\w:-]+)([^<>]*?)(/?)>', re.DOTALL)
         x_data_pattern = re.compile(r'x-data\s*=\s*(?P<q>["\'])(.*?)(?P=q)', re.DOTALL)
-        stack: List[Tuple[str, Set[str]]] = []
+        stack: List[Tuple[str, Dict[str, str]]] = []
 
         for match in tag_pattern.finditer(content):
             tag_start, tag_end = match.span()
@@ -39,12 +108,12 @@ class AlpineJsCompletions(EventListener):
                         del stack[index:]
                         break
             else:
-                properties = set()
+                members: Dict[str, str] = {}
                 x_data_match = x_data_pattern.search(attrs)
                 if x_data_match:
-                    properties = self.extract_x_data_properties(x_data_match.group(2))
+                    members = self.resolve_x_data_members(x_data_match.group(2), registered_data)
 
-                stack.append((tag_name, properties))
+                stack.append((tag_name, members))
 
                 if self_closing or attrs.strip().endswith('/'):
                     stack.pop()
@@ -52,11 +121,11 @@ class AlpineJsCompletions(EventListener):
             if tag_start <= pt < tag_end:
                 break
 
-        active_properties = set()
-        for _, properties in stack:
-            active_properties.update(properties)
+        active_members: Dict[str, str] = {}
+        for _, members in stack:
+            active_members = self.merge_member_maps(active_members, members)
 
-        return active_properties
+        return active_members
 
     def get_current_alpine_attribute(self, view: View, pt: Point) -> Tuple[Optional[str], bool]:
         """
@@ -117,6 +186,8 @@ class AlpineJsCompletions(EventListener):
         line_prefix = view.substr(Region(view.line(pt).a, pt))
         
         kind_directive = [KindId.NAMESPACE, 'd', 'Alpine.js Directive']
+        kind_data = [KindId.NAMESPACE, 'd', 'Alpine.js Data']
+        kind_method = [KindId.FUNCTION, 'm', 'Alpine.js Method']
         kind_property = [KindId.VARIABLE, 'p', 'Alpine.js Property']
         kind_variable = [KindId.VARIABLE, 'v', 'Alpine.js Variable']
         kind_modifier = [KindId.KEYWORD, 'm', 'Modifier']
@@ -135,7 +206,7 @@ class AlpineJsCompletions(EventListener):
         
         if is_inside:
             if attr_name:
-                properties = self.get_active_x_data_properties(view, pt)
+                members = self.get_active_x_data_members(view, pt)
 
                 ignored_keys = {'get', 'set', 'return', 'if', 'else', 'this'}
                 out = []
@@ -144,22 +215,31 @@ class AlpineJsCompletions(EventListener):
                 this_match = re.search(r'\bthis\.(\w*)$', line_prefix)
                 if this_match:
                     this_prefix = this_match.group(1).lower()
-                    for prop in sorted(list(properties)):
-                        if prop not in ignored_keys and prop.lower().startswith(this_prefix):
-                            out.append(CompletionItem(prop, kind=kind_property, details='Component Property'))
+                    for member_name in sorted(list(members)):
+                        if member_name not in ignored_keys and member_name.lower().startswith(this_prefix):
+                            member_kind = kind_method if members[member_name] == 'method' else kind_property
+                            member_detail = 'Component Method' if members[member_name] == 'method' else 'Component Property'
+                            out.append(CompletionItem(member_name, kind=member_kind, details=member_detail))
                     return CompletionList(out, flags=sublime.INHIBIT_WORD_COMPLETIONS)
 
                 # Caso B: Variables normales
                 iteration_vars = self.get_active_iteration_vars(view, pt)
+                registered_data = self.get_registered_data_names(view) if attr_name == 'x-data' else set()
                 completions = []
                 
                 for var in sorted(list(iteration_vars)):
                     if var not in ignored_keys:
                         completions.append(CompletionItem(var, kind=kind_variable, details='Iteration Variable'))
 
-                for prop in sorted(list(properties)):
-                    if prop not in ignored_keys and prop not in iteration_vars:
-                        completions.append(CompletionItem(prop, kind=kind_property, details='Defined in x-data'))
+                for member_name in sorted(list(members)):
+                    if member_name not in ignored_keys and member_name not in iteration_vars:
+                        member_kind = kind_method if members[member_name] == 'method' else kind_property
+                        member_detail = 'Defined method in x-data' if members[member_name] == 'method' else 'Defined in x-data'
+                        completions.append(CompletionItem(member_name, kind=member_kind, details=member_detail))
+
+                for data_name in sorted(list(registered_data)):
+                    if data_name not in ignored_keys:
+                        completions.append(CompletionItem(data_name, kind=kind_data, details='Reusable Alpine.data'))
                 
                 magics = ['$event', '$dispatch', '$nextTick', '$refs', '$el', '$watch', '$root', '$data', '$id']
                 for magic in magics:
