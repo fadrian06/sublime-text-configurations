@@ -7,6 +7,24 @@ from sublime_types import Point, KindId
 
 
 class AlpineJsCompletions(EventListener):
+    def file_uses_alpine(self, view: View) -> bool:
+        content = view.substr(Region(0, view.size()))
+        return (
+            'alpinejs' in content.lower()
+            or 'alpine.' in content.lower()
+            or bool(re.search(r'\b(?:x-data|x-init|x-show|x-bind|x-on|x-text|x-html|x-model|x-effect)\b', content))
+        )
+
+    def is_inside_document_add_event_listener_event(self, view: View, pt: Point) -> bool:
+        limit = max(0, pt - 500)
+        text = view.substr(Region(limit, pt))
+        match = re.search(r'document\.addEventListener\(\s*(["\'])', text)
+        if not match:
+            return False
+
+        quote_type = match.group(1)
+        return quote_type not in text[match.end():]
+
     def is_inside_top_level_alpine_data_object(self, view: View, pt: Point) -> bool:
         content = view.substr(Region(0, view.size()))
         pattern = re.compile(r'Alpine\.data\(\s*(["\'])([\w-]+)\1\s*,', re.DOTALL)
@@ -439,6 +457,15 @@ class AlpineJsCompletions(EventListener):
                 kind=[KindId.MARKUP, 'c', 'CDN'],
                 annotation='Alpine.js v3.15.11'
             )])
+
+        # 1.25 CONTEXTO: document.addEventListener('...')
+        if self.file_uses_alpine(view) and self.is_inside_document_add_event_listener_event(view, pt):
+            lifecycle_events = [
+                CompletionItem('alpine:init', kind=kind_custom_event, details='Before Alpine initializes'),
+                CompletionItem('alpine:initialized', kind=kind_custom_event, details='After Alpine finishes initializing'),
+            ]
+            out = [c for c in lifecycle_events if c.trigger.lower().startswith(prefix.lower())]
+            return CompletionList(out, flags=sublime.INHIBIT_WORD_COMPLETIONS)
 
         # 1.5 CONTEXTO: Dentro del objeto raiz de Alpine.data(...)
         if self.is_inside_top_level_alpine_data_object(view, pt):
