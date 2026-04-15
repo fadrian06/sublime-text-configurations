@@ -1,5 +1,5 @@
 import re
-from sublime import View, CompletionList, CompletionItem, Region
+from sublime import View, CompletionList, CompletionItem, Region, CompletionFormat
 from sublime_plugin import EventListener
 from typing import List
 from sublime_types import Point, KindId
@@ -7,25 +7,16 @@ from sublime_types import Point, KindId
 
 class AlpineJsCompletions(EventListener):
     def on_modified_async(self, view: View):
-        # Evitar disparar en la consola o widgets
         if view.settings().get('is_widget'):
             return
-            
-        # Obtener el punto actual del cursor
         if not view.sel():
             return
         pt = view.sel()[0].b
         if pt == 0:
             return
-            
-        # Verificar el último carácter escrito
         char = view.substr(Region(pt - 1, pt))
-        
-        # Si es uno de nuestros disparadores, forzamos el autocompletado
         if char in ":@.":
-            # Solo si estamos dentro de una etiqueta HTML
             if view.match_selector(pt, "text.html meta.tag"):
-                # Pequeño retardo para dejar que el buffer se actualice
                 view.run_command("auto_complete", {
                     "disable_auto_insert": True,
                     "next_completion_if_showing": False
@@ -80,7 +71,8 @@ class AlpineJsCompletions(EventListener):
         # Caso A: Modificadores (ej: @click.prevent)
         last_word = line_prefix.split()[-1] if line_prefix.strip() else ""
         if '.' in last_word:
-            attr_base = last_word.split('.')[0]
+            attr_parts = last_word.split('.')
+            attr_base = attr_parts[0]
             if attr_base.startswith('@') or attr_base.startswith('x-on:'):
                 modifiers = [
                     ('prevent', 'preventDefault'), ('stop', 'stopPropagation'), ('outside', 'Outside element'),
@@ -92,7 +84,17 @@ class AlpineJsCompletions(EventListener):
                     ('down', 'Key: Down'), ('left', 'Key: Left'), ('right', 'Key: Right'),
                     ('shift', 'Shift'), ('ctrl', 'Ctrl'), ('alt', 'Alt'), ('meta', 'Meta')
                 ]
-                out = [CompletionItem(mod, kind=kind_modifier, details=desc) for mod, desc in modifiers]
+                
+                out = []
+                for mod, desc in modifiers:
+                    # Si el modificador no termina en punto, añadimos el snippet para cerrar el atributo
+                    # Si ya hay un punto después (porque estamos encadenando), solo insertamos el nombre
+                    out.append(CompletionItem.snippet_completion(
+                        mod,
+                        mod + '="$1"',
+                        kind=kind_modifier,
+                        details=desc
+                    ))
                 return CompletionList(out)
 
         # Caso B: Eventos (ej: @click, x-on:submit)
@@ -108,7 +110,15 @@ class AlpineJsCompletions(EventListener):
                 'loadedmetadata', 'loadstart', 'pause', 'play', 'playing', 'progress', 'ratechange', 
                 'seeked', 'seeking', 'stalled', 'suspend', 'timeupdate', 'volumechange', 'waiting', 'toggle'
             ]
-            out = [CompletionItem(event, kind=kind_event) for event in sorted(list(set(events)))]
+            
+            out = []
+            for event in sorted(list(set(events))):
+                # Usamos snippet para que al seleccionar el evento inserte evento="$1"
+                out.append(CompletionItem.snippet_completion(
+                    event,
+                    event + '="$1"',
+                    kind=kind_event
+                ))
             return CompletionList(out)
 
         # 4. CONTEXTO: Directivas base x-*
