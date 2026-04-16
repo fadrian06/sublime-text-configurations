@@ -1,0 +1,12 @@
+// SublimeLinter Settings - User
+{
+  // "debug": true,
+  "linters": {
+    "eslint": {
+      "selector": "source.js"
+    },
+    "oxlint": {
+      "selector": "source.js"
+    }
+  }
+}
