@@ -1,0 +1,51 @@
+{
+  "alias": {},
+  "os_specific_alias": {
+    "Desktop": {
+      "windows": "~\\Desktop"
+    },
+    "htdocs": {
+      "windows": "C:\\xampp\\htdocs"
+    },
+  },
+  "default_initial": "",
+  "use_cursor_text": true,
+  "show_files": true,
+  "show_path": true,
+  "default_root": "current",
+  "default_path": "~",
+  "default_folder_index": 0,
+  "alias_root": "current",
+  "alias_path": "~",
+  "alias_folder_index": 0,
+  "ignore_case": true,
+  "auto_refresh_sidebar": true,
+  "completion_type": "windows",
+  "complete_single_entry": true,
+  "use_folder_name": true,
+  "relative_from_current": true,
+  "default_extension": "",
+  "folder_permissions": "",
+  "file_permissions": "",
+  "rename_default": "<filedirectory><filename>",
+  "vcs_management": true,
+  "file_templates": {
+    "php": [
+      "Packages/User/file_templates/index.sublime-snippet",
+      "Packages/User/file_templates/class.sublime-snippet",
+    ]
+  },
+  "shell_input": true,
+  "append_extension_on_move": true,
+  "relative_fallback_index": 0,
+  "append_extension_on_copy": true,
+  "copy_default": "<filedirectory><filename>",
+  "cut_to_file_default": "<filedirectory><filename>",
+  "current_fallback_to_project": true,
+  "warn_overwrite_on_move": true,
+  "new_file_default_root": "default_root",
+  "rename_file_default_root": "default_root",
+  "copy_file_default_root": "default_root",
+  "empty_filename_action": false,
+  "cursor_before_extension": true,
+}
