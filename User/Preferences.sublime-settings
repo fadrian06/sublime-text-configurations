@@ -137,6 +137,8 @@
   "hot_exit_projects": true,
   "ignored_packages": [
     "ActionScript",
+    "AppleScript",
+    "ASP",
     "Vintage",
   ],
   "ignored_snippets": [],
