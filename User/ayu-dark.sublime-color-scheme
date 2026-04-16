@@ -271,6 +271,22 @@
     {
       "scope": "support.class.component.astro",
       "foreground": "var(light-orange)"
-    }
+    },
+    /////////////
+    // MINIMAP //
+    /////////////
+    {
+      "name": "Minimap Find Highlight",
+      "scope": "minimap.find_highlight",
+      "foreground": "#FFCC66" // Un amarillo más vibrante que el gris por defecto
+    },
+    ///////////////
+    // LIGATURES //
+    ///////////////
+    {
+      "name": "Keyword",
+      "scope": "keyword, storage.type, storage.modifier",
+      "font_style": "italic" // Si quieres cursivas
+    },
   ]
 }
