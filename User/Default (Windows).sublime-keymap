@@ -23,18 +23,6 @@
       }
     ]
   },
-  {
-    "keys": [
-      "ctrl+alt+d"
-    ],
-    "command": "side_bar_duplicate",
-  },
-  {
-    "keys": [
-      "ctrl+alt+n"
-    ],
-    "command": "side_bar_new_file",
-  },
   // Toggle the default shell in panel
   {
     "keys": [
