@@ -1,0 +1,10 @@
+%YAML 1.2
+---
+# http://www.sublimetext.com/docs/syntax.html
+name: HTML (Blade, AlpineJS)
+scope: text.html.blade.alpinejs
+version: 2
+
+extends:
+  - Packages/AlpineJS/Syntaxes/PHP (AlpineJS).sublime-syntax
+  - Packages/Laravel Blade/Syntaxes/HTML (Blade).sublime-syntax

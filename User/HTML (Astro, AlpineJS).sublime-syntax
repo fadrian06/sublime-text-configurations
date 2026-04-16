@@ -1,0 +1,10 @@
+%YAML 1.2
+---
+# http://www.sublimetext.com/docs/syntax.html
+name: HTML (Astro, AlpineJS)
+scope: text.html.astro.alpinejs
+version: 2
+
+extends:
+  - Packages/AlpineJS/Syntaxes/HTML (AlpineJS).sublime-syntax
+  - Packages/Astro/Syntaxes/HTML (Astro).sublime-syntax
