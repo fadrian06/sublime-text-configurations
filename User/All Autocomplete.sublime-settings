@@ -1,8 +1,11 @@
 {
-  // An array of syntax names to exclude from being autocompleted.
-  // Can be a partial string, for instance, "css" would match scss code.
   // "exclude_from_completion": [
-  //      "css",
-  //      "scss"
-  // ]
+  //   "css",
+  //   "js"
+  // ],
+  // "exclude_sources": [
+  //   "markdown"
+  // ],
+  // "min_word_size": 5, // don't show completions for words with fewer than this many chars
+  // "max_word_size": 40 // don't show completions for words with more than this many chars
 }
