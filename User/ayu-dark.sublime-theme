@@ -10,7 +10,6 @@
       "class": "sidebar_label",
       "font.face": "var(font_face)",
       "font.size": "var(ui_font_size)",
-      "fg": "#7a8394"
     },
     {
       "class": "sidebar_heading",
