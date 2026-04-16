@@ -1,38 +1,55 @@
 // Documentation at https://www.sublimetext.com/docs/themes.html
 {
   "variables": {
-    "font_face": "Roboto"
+    "font_face": "Roboto",
+    "ui_font_size": 11.5
   },
   "rules": [
+    // --- TIPOGRAFÍA UI ---
     {
       "class": "sidebar_label",
-      "font.face": "var(font_face)"
+      "font.face": "var(font_face)",
+      "font.size": "var(ui_font_size)",
+      "fg": "#7a8394"
     },
     {
       "class": "sidebar_heading",
-      "font.face": "var(font_face)"
+      "font.face": "var(font_face)",
+      "font.size": "var(ui_font_size)",
+      "color": "#7a8394"
     },
     {
       "class": "tab_label",
-      "font.face": "var(font_face)"
+      "font.face": "var(font_face)",
+      "font.size": "var(ui_font_size)"
     },
     {
       "class": "label_control",
-      "font.face": "var(font_face)"
+      "font.face": "var(font_face)",
+      "font.size": "var(ui_font_size)"
     },
     {
       "class": "quick_panel_label",
-      "font.face": "var(font_face)"
+      "font.face": "var(font_face)",
+      "font.size": "var(ui_font_size)"
     },
-    {
-      "class": "quick_panel_path_label",
-      "font.face": "var(font_face)"
-    },
+    // --- ESPACIADO ---
     {
       "class": "sidebar_tree",
       "row_padding": [
-        8,
-        5
+        6,
+        4,
+      ]
+    },
+    {
+      "class": "tabset_control",
+      "tab_height": 32
+    },
+    {
+      "class": "icon_file_type",
+      "content_margin": [
+        6,
+        6
       ]
     }
   ]
