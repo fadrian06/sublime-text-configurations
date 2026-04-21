@@ -20,7 +20,10 @@
   },
   "globals": {
     "active_guide": "var(light-blue)",
-    "stack_guide": "var(sky-blue)"
+    "stack_guide": "var(sky-blue)",
+    "bracket_contents_options": "none",
+    "brackets_options": "none",
+    "tags_options": "none",
   },
   "rules": [
     /////////////
