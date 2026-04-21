@@ -118,7 +118,7 @@
     "ss09",
     "ss10",
   ],
-  "font_size": 11,
+  "font_size": 10,
   "git_diff_target": "index",
   "goto_anything_exclude_gitignore": false,
   "gtk_client_side_window_decorations": false,
